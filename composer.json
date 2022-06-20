@@ -1,9 +1,9 @@
 {
     "type": "library",
-    "name": "nguyenanhung/template-php-lib",
-    "description": "Template for repository helper, library - Basic, Simple and Lightweight",
+    "name": "nguyenanhung/my-crawler",
+    "description": "Crawler helper, library - Basic, Simple and Lightweight",
     "keywords": [
-        "template",
+        "crawler",
         "helper",
         "library",
         "php"
@@ -20,11 +20,15 @@
         }
     ],
     "require": {
-        "php": ">=5.6"
+        "php": ">=7.1.3",
+        "ext-curl": "*",
+        "ext-json": "*",
+        "ext-mbstring": "*",
+        "fabpot/goutte": "^4.0 || ^3.0 || ^2.0 || ^1.0"
     },
     "autoload": {
         "psr-4": {
-            "nguyenanhung\\Libraries\\TemplateREPLACE\\": "src/"
+            "nguyenanhung\\Libraries\\Crawler\\": "src/"
         },
         "files": [
             "helpers/helpers.php"
