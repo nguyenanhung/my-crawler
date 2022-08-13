@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## [1.0.1] - 2022/08/14
+
+### Upgrade
+
+- [x] Customize Client
+
 ## [1.0.0] - 2022/06/20
 
 ### Added
