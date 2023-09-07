@@ -307,6 +307,9 @@ trait CrawlerFilterTrait
 
     public function reformatDataContentAndRemovedLinkHrefWithRegex($content, $listLinks)
     {
+        if (empty($listLinks)) {
+            return $content;
+        }
         foreach ($listLinks as $item) {
             $itemNew = preg_replace('/<a(.*?)href="(.*?)"(.*?)>/', '', $item);
             $itemNew = preg_replace('#</a>#', '', $itemNew);
@@ -339,7 +342,7 @@ trait CrawlerFilterTrait
         foreach ($checklists as $openTag => $closeTag) {
             $res = $this->parseGetContentValueWithExplode($headStr, $openTag, $closeTag);
             if (!empty($res)) {
-                return $res;
+                return trim($res);
             }
         }
         return '';
@@ -363,7 +366,7 @@ trait CrawlerFilterTrait
         foreach ($checklists as $openTag => $closeTag) {
             $res = $this->parseGetContentValueWithExplode($headStr, $openTag, $closeTag);
             if (!empty($res)) {
-                return $res;
+                return trim($res);
             }
         }
         return '';
@@ -385,7 +388,7 @@ trait CrawlerFilterTrait
         foreach ($checklists as $openTag => $closeTag) {
             $res = $this->parseGetContentValueWithExplode($headStr, $openTag, $closeTag);
             if (!empty($res)) {
-                return $res;
+                return trim($res);
             }
         }
         return '';
@@ -406,7 +409,7 @@ trait CrawlerFilterTrait
         foreach ($checklists as $openTag => $closeTag) {
             $res = $this->parseGetContentValueWithExplode($headStr, $openTag, $closeTag);
             if (!empty($res)) {
-                return $res;
+                return trim($res);
             }
         }
         return '';
@@ -425,7 +428,7 @@ trait CrawlerFilterTrait
         foreach ($checklists as $openTag => $closeTag) {
             $res = $this->parseGetContentValueWithExplode($headStr, $openTag, $closeTag);
             if (!empty($res)) {
-                return $res;
+                return trim($res);
             }
         }
         return '';
@@ -443,7 +446,7 @@ trait CrawlerFilterTrait
         foreach ($checklists as $openTag => $closeTag) {
             $res = $this->parseGetContentValueWithExplode($headStr, $openTag, $closeTag);
             if (!empty($res)) {
-                return $res;
+                return trim($res);
             }
         }
         return '';
@@ -459,7 +462,7 @@ trait CrawlerFilterTrait
         foreach ($checklists as $openTag => $closeTag) {
             $res = $this->parseGetContentValueWithExplode($headStr, $openTag, $closeTag);
             if (!empty($res)) {
-                return $res;
+                return trim($res);
             }
         }
         return '';
