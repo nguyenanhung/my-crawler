@@ -20,7 +20,7 @@ trait CrawlerFilterTrait
             return $node->text();
         });
         $content = $response[0] ?? '';
-        $content = (string)$content;
+        $content = (string) $content;
         return trim($content);
     }
 
@@ -37,7 +37,7 @@ trait CrawlerFilterTrait
             return $node->html();
         });
         $content = $response[0] ?? '';
-        $content = (string)$content;
+        $content = (string) $content;
         return trim($content);
     }
 
@@ -191,7 +191,7 @@ trait CrawlerFilterTrait
             return $html;
         }
 
-        return preg_replace($pattern, "", $html) ?: $html;
+        return preg_replace($pattern, "", $html) ? : $html;
     }
 
     public function filterScriptTagRemoved($html)
@@ -326,12 +326,15 @@ trait CrawlerFilterTrait
     {
         $checklists = [
             // openTag => closeTag
-            '<meta name="title" content="' => '"',
-            '<meta itemprop="title" content="' => '"',
-            '<meta property="og:title" content="' => '"',
-            '<meta name="twitter:title" content="' => '"',
-            '"headline":"' => '"',
-            '"headline": "' => '"',
+            '<meta name="title" content="'                         => '"',
+            '<meta itemprop="title" content="'                     => '"',
+            '<meta property="og:title" content="'                  => '"',
+            '<meta property="og:title" itemprop="title" content="' => '"',
+            '<meta name="twitter:title" content="'                 => '"',
+            '"headline":"'                                         => '"',
+            '"headline": "'                                        => '"',
+            '<meta id="title" name="title" content="'              => '"',
+            '<meta id="Title" name="title" content="'              => '"',
         ];
         foreach ($checklists as $openTag => $closeTag) {
             $res = $this->parseGetContentValueWithExplode($headStr, $openTag, $closeTag);
@@ -346,12 +349,16 @@ trait CrawlerFilterTrait
     {
         $checklists = [
             // openTag => closeTag
-            '<meta name="description" content="' => '"',
-            '<meta itemprop="description" content="' => '"',
-            '<meta property="og:description" content="' => '"',
-            '<meta name="twitter:description" content="' => '"',
-            '"description":"' => '"',
-            '"description": "' => '"',
+            '<meta name="description" content="'                      => '"',
+            '<meta itemprop="description" content="'                  => '"',
+            '<meta property="og:description" content="'               => '"',
+            '<meta name="twitter:description" content="'              => '"',
+            '"description":"'                                         => '"',
+            '"description": "'                                        => '"',
+            '<meta id="description" name="description" content="'     => '"',
+            '<meta id="metaDes" name="description" content="'         => '"',
+            '<meta id="metaDescription" name="description" content="' => '"',
+            '<meta id="MetaDescription" name="DESCRIPTION" content="' => '"',
         ];
         foreach ($checklists as $openTag => $closeTag) {
             $res = $this->parseGetContentValueWithExplode($headStr, $openTag, $closeTag);
@@ -366,9 +373,14 @@ trait CrawlerFilterTrait
     {
         $checklists = [
             // openTag => closeTag
-            '<meta name="keywords" content="' => '"',
-            '<meta name="news_keywords" content="' => '"',
+            '<meta name="keywords" content="'                     => '"',
+            '<meta name="news_keywords" content="'                => '"',
             '<meta itemprop="keywords" name="keywords" content="' => '"',
+            '<meta id="metakeywords" name="keywords" content="'   => '"',
+            '<meta id="MetaKeyword" name="keywords" content="'    => '"',
+            '<meta id="keywords" name="keywords" content="'       => '"',
+            '<meta id="MetaKeywords" name="keywords" content="'   => '"',
+            '<meta id="MetaKeywords" name="KEYWORDS" content="'   => '"',
         ];
         foreach ($checklists as $openTag => $closeTag) {
             $res = $this->parseGetContentValueWithExplode($headStr, $openTag, $closeTag);
@@ -383,12 +395,13 @@ trait CrawlerFilterTrait
     {
         $checklists = [
             // openTag => closeTag
-            '<meta property="og:image" content="' => '"',
-            '<meta property="og:image:url" content="' => '"',
-            '<meta name="twitter:image" content="' => '"',
-            '<meta itemprop="image" content="' => '"',
-            '<meta itemprop="thumbnailUrl" content="' => '"',
-            '<link rel="image_src" href="' => '"',
+            '<meta property="og:image" content="'                         => '"',
+            '<meta property="og:image:url" content="'                     => '"',
+            '<meta name="twitter:image" content="'                        => '"',
+            '<meta itemprop="image" content="'                            => '"',
+            '<meta itemprop="thumbnailUrl" content="'                     => '"',
+            '<meta property="og:image" itemprop="thumbnailUrl" content="' => '"',
+            '<link rel="image_src" href="'                                => '"',
         ];
         foreach ($checklists as $openTag => $closeTag) {
             $res = $this->parseGetContentValueWithExplode($headStr, $openTag, $closeTag);
@@ -404,10 +417,10 @@ trait CrawlerFilterTrait
         $checklists = [
             // openTag => closeTag
             '<meta property="article:published_time" content="' => '"',
-            '"datePublished":"' => '"',
-            '"datePublished": "' => '"',
-            '<meta property="og:updated_time" content="' => '"',
-            '<meta itemprop="datePublished" content="' => '"',
+            '"datePublished":"'                                 => '"',
+            '"datePublished": "'                                => '"',
+            '<meta property="og:updated_time" content="'        => '"',
+            '<meta itemprop="datePublished" content="'          => '"',
         ];
         foreach ($checklists as $openTag => $closeTag) {
             $res = $this->parseGetContentValueWithExplode($headStr, $openTag, $closeTag);
@@ -423,9 +436,9 @@ trait CrawlerFilterTrait
         $checklists = [
             // openTag => closeTag
             '<meta property="article:modified_time" content="' => '"',
-            '"dateModified":"' => '"',
-            '"dateModified": "' => '"',
-            '<meta itemprop="dateModified" content="' => '"',
+            '"dateModified":"'                                 => '"',
+            '"dateModified": "'                                => '"',
+            '<meta itemprop="dateModified" content="'          => '"',
         ];
         foreach ($checklists as $openTag => $closeTag) {
             $res = $this->parseGetContentValueWithExplode($headStr, $openTag, $closeTag);
@@ -440,7 +453,7 @@ trait CrawlerFilterTrait
     {
         $checklists = [
             // openTag => closeTag
-            '<meta itemprop="dateCreated" content="' => '"',
+            '<meta itemprop="dateCreated" content="'          => '"',
             '<meta property="article:created_time" content="' => '"',
         ];
         foreach ($checklists as $openTag => $closeTag) {
