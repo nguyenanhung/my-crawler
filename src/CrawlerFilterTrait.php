@@ -378,7 +378,7 @@ trait CrawlerFilterTrait
             '<meta id="Title" name="title" content="' => '"',
         ];
         foreach ($checklists as $openTag => $closeTag) {
-            $res = $this->parseGetContentValueWithExplode($headStr, $openTag, $closeTag);
+            $res = $this->parseGetContentValueWithExplodeAndStripTags($headStr, $openTag, $closeTag);
             if (!empty($res)) {
                 return trim($res);
             }
@@ -402,7 +402,7 @@ trait CrawlerFilterTrait
             '<meta id="MetaDescription" name="DESCRIPTION" content="' => '"',
         ];
         foreach ($checklists as $openTag => $closeTag) {
-            $res = $this->parseGetContentValueWithExplode($headStr, $openTag, $closeTag);
+            $res = $this->parseGetContentValueWithExplodeAndStripTags($headStr, $openTag, $closeTag);
             if (!empty($res)) {
                 return trim($res);
             }
@@ -424,7 +424,7 @@ trait CrawlerFilterTrait
             '<meta id="MetaKeywords" name="KEYWORDS" content="' => '"',
         ];
         foreach ($checklists as $openTag => $closeTag) {
-            $res = $this->parseGetContentValueWithExplode($headStr, $openTag, $closeTag);
+            $res = $this->parseGetContentValueWithExplodeAndStripTags($headStr, $openTag, $closeTag);
             if (!empty($res)) {
                 return trim($res);
             }
@@ -445,7 +445,7 @@ trait CrawlerFilterTrait
             '<link rel="image_src" href="' => '"',
         ];
         foreach ($checklists as $openTag => $closeTag) {
-            $res = $this->parseGetContentValueWithExplode($headStr, $openTag, $closeTag);
+            $res = $this->parseGetContentValueWithExplodeAndStripTags($headStr, $openTag, $closeTag);
             if (!empty($res)) {
                 return trim($res);
             }
