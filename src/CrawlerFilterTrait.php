@@ -444,8 +444,8 @@ trait CrawlerFilterTrait
             if (!empty($res)) {
                 $time = trim($res);
                 $time = str_replace(
-                    array('::', '+07:00', '+08:00', 'T',),
-                    array(':', '', '', ' ',),
+                    array('::', '+07:00', '+08:00', '.000', 'T'),
+                    array(':', '', '', '', ' '),
                     $time
                 );
                 return trim($time);
