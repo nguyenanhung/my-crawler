@@ -450,7 +450,9 @@ trait CrawlerFilterTrait
         foreach ($checklists as $openTag => $closeTag) {
             $res = $this->parseGetContentValueWithExplode($headStr, $openTag, $closeTag);
             if (!empty($res)) {
-                return trim($res);
+                $time = trim($res);
+                $time = str_replace('::', ':', $time);
+                return trim($time);
             }
         }
         return '';
@@ -468,7 +470,9 @@ trait CrawlerFilterTrait
         foreach ($checklists as $openTag => $closeTag) {
             $res = $this->parseGetContentValueWithExplode($headStr, $openTag, $closeTag);
             if (!empty($res)) {
-                return trim($res);
+                $time = trim($res);
+                $time = str_replace('::', ':', $time);
+                return trim($time);
             }
         }
         return '';
@@ -484,7 +488,9 @@ trait CrawlerFilterTrait
         foreach ($checklists as $openTag => $closeTag) {
             $res = $this->parseGetContentValueWithExplode($headStr, $openTag, $closeTag);
             if (!empty($res)) {
-                return trim($res);
+                $time = trim($res);
+                $time = str_replace('::', ':', $time);
+                return trim($time);
             }
         }
         return '';
