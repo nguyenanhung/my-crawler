@@ -318,7 +318,7 @@ trait CrawlerFilterTrait
         return $content;
     }
 
-    protected function reformatDataContentImageLinkInContent($content, $listImages)
+    public function reformatDataContentImageLinkInContent($content, $listImages)
     {
         if (empty($listImages)) {
             return $content;
