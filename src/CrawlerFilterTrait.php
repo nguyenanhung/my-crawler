@@ -318,6 +318,28 @@ trait CrawlerFilterTrait
         return $content;
     }
 
+    protected function reformatDataContentImageLinkInContent($content, $listImages)
+    {
+        if (empty($listImages)) {
+            return $content;
+        }
+        foreach ($listImages as $item) {
+            $oldItem = trim($item);
+            $title = $this->parseGetContentValueWithExplodeAndStripTags($oldItem, 'title="', '"');
+            $alt = $this->parseGetContentValueWithExplodeAndStripTags($oldItem, 'alt="', '"');
+            $imgSrc = $this->parseGetContentValueWithExplodeAndStripTags($oldItem, 'data-src="', '"');
+            if (empty($imgSrc)) {
+                $imgSrc = $this->parseGetContentValueWithExplodeAndStripTags($oldItem, 'data-original="', '"');
+                if (empty($imgSrc)) {
+                    $imgSrc = $this->parseGetContentValueWithExplodeAndStripTags($oldItem, 'src="', '"');
+                }
+            }
+            $newItem = '<img class="news-posts-content-image" width="100%" src="' . trim($imgSrc) . '" title="' . trim($title) . '" alt="' . trim($alt) . '" />';
+            $content = str_replace($oldItem, $newItem, $content);
+        }
+        return $content;
+    }
+
     public function getFirstImageSrcLinkInDataContent($crawler, $filter, $openTag = 'src="', $closeTag = '"'): string
     {
         $contentListImages = $this->crawlerFilterGetRawOuterHtml($crawler, $filter);
