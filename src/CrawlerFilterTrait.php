@@ -318,6 +318,21 @@ trait CrawlerFilterTrait
         return $content;
     }
 
+    public function parseMatchesImageSrcFromChecklists($txt, $checklists): string
+    {
+        $txt = trim($txt);
+        if (empty($txt) || empty($checklists)) {
+            return $txt;
+        }
+        foreach ($checklists as $openTag => $closeTag) {
+            $res = $this->parseGetContentValueWithExplodeAndStripTags($txt, $openTag, $closeTag);
+            if (!empty($res)) {
+                return trim($res);
+            }
+        }
+        return '';
+    }
+
     public function reformatDataContentImageLinkInContent($content, $listImages)
     {
         if (empty($listImages)) {
@@ -327,13 +342,14 @@ trait CrawlerFilterTrait
             $oldItem = trim($item);
             $title = $this->parseGetContentValueWithExplodeAndStripTags($oldItem, 'title="', '"');
             $alt = $this->parseGetContentValueWithExplodeAndStripTags($oldItem, 'alt="', '"');
-            $imgSrc = $this->parseGetContentValueWithExplodeAndStripTags($oldItem, 'data-src="', '"');
-            if (empty($imgSrc)) {
-                $imgSrc = $this->parseGetContentValueWithExplodeAndStripTags($oldItem, 'data-original="', '"');
-                if (empty($imgSrc)) {
-                    $imgSrc = $this->parseGetContentValueWithExplodeAndStripTags($oldItem, 'src="', '"');
-                }
-            }
+            $imgSrc = $this->parseMatchesImageSrcFromChecklists(
+                $oldItem,
+                array(
+                    'data-src="' => '"',
+                    'data-original="' => '"',
+                    'src="' => '"',
+                )
+            );
             $newItem = '<img class="news-posts-content-image" width="100%" src="' . trim($imgSrc) . '" title="' . trim($title) . '" alt="' . trim($alt) . '" />';
             $content = str_replace($oldItem, $newItem, $content);
         }
