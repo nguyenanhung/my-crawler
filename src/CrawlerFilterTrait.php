@@ -20,7 +20,7 @@ trait CrawlerFilterTrait
             return $node->text();
         });
         $content = $response[0] ?? '';
-        $content = (string)$content;
+        $content = (string) $content;
         return trim($content);
     }
 
