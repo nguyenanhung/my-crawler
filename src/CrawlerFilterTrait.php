@@ -437,7 +437,7 @@ trait CrawlerFilterTrait
         return '';
     }
 
-    protected function getDataHeadMetaTimeAndFormat($headStr, $checklists): string
+    public function getDataHeadMetaTimeAndReformatFormat($headStr, $checklists): string
     {
         foreach ($checklists as $openTag => $closeTag) {
             $res = $this->parseGetContentValueWithExplodeAndStripTags($headStr, $openTag, $closeTag);
@@ -464,7 +464,7 @@ trait CrawlerFilterTrait
             '<meta property="og:updated_time" content="' => '"',
             '<meta itemprop="datePublished" content="' => '"',
         ];
-        return $this->getDataHeadMetaTimeAndFormat($headStr, $checklists);
+        return $this->getDataHeadMetaTimeAndReformatFormat($headStr, $checklists);
     }
 
     public function getDataHeadMetaModifiedTime($headStr): string
@@ -476,7 +476,7 @@ trait CrawlerFilterTrait
             '"dateModified": "' => '"',
             '<meta itemprop="dateModified" content="' => '"',
         ];
-        return $this->getDataHeadMetaTimeAndFormat($headStr, $checklists);
+        return $this->getDataHeadMetaTimeAndReformatFormat($headStr, $checklists);
     }
 
     public function getDataHeadMetaCreatedTime($headStr): string
@@ -486,7 +486,7 @@ trait CrawlerFilterTrait
             '<meta itemprop="dateCreated" content="' => '"',
             '<meta property="article:created_time" content="' => '"',
         ];
-        return $this->getDataHeadMetaTimeAndFormat($headStr, $checklists);
+        return $this->getDataHeadMetaTimeAndReformatFormat($headStr, $checklists);
     }
 
     public function getDataContentSapoText(Crawler $crawler, $sapoFilter, $replace = ''): string
