@@ -396,8 +396,10 @@ trait CrawlerFilterTrait
             '<meta name="twitter:description" content="' => '"',
             '"description":"' => '"',
             '"description": "' => '"',
+            '"description ": "' => '"',
             '<meta id="description" name="description" content="' => '"',
             '<meta id="metaDes" name="description" content="' => '"',
+            '<meta id="metades" name="description" content="' => '"',
             '<meta id="metaDescription" name="description" content="' => '"',
             '<meta id="MetaDescription" name="DESCRIPTION" content="' => '"',
         ];
