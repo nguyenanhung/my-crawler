@@ -502,6 +502,8 @@ trait CrawlerFilterTrait
             '"datePublished": "' => '"',
             '<meta property="og:updated_time" content="' => '"',
             '<meta itemprop="datePublished" content="' => '"',
+            '"uploadDate": "' => '"',
+            '"uploadDate":"' => '"',
         ];
         return $this->getDataHeadMetaTimeAndReformatFormat($headStr, $checklists);
     }
@@ -514,6 +516,8 @@ trait CrawlerFilterTrait
             '"dateModified":"' => '"',
             '"dateModified": "' => '"',
             '<meta itemprop="dateModified" content="' => '"',
+            '"uploadDate": "' => '"',
+            '"uploadDate":"' => '"',
         ];
         return $this->getDataHeadMetaTimeAndReformatFormat($headStr, $checklists);
     }
@@ -524,6 +528,8 @@ trait CrawlerFilterTrait
             // openTag => closeTag
             '<meta itemprop="dateCreated" content="' => '"',
             '<meta property="article:created_time" content="' => '"',
+            '"uploadDate": "' => '"',
+            '"uploadDate":"' => '"',
         ];
         return $this->getDataHeadMetaTimeAndReformatFormat($headStr, $checklists);
     }
