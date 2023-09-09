@@ -307,7 +307,7 @@ trait CrawlerFilterTrait
 
     public function reformatDataContentAndRemovedLinkHrefWithRegex($content, $listLinks)
     {
-        if (empty($listLinks)) {
+        if (empty($content) || empty($listLinks)) {
             return $content;
         }
         foreach ($listLinks as $item) {
@@ -335,7 +335,7 @@ trait CrawlerFilterTrait
 
     public function reformatDataContentImageLinkInContent($content, $listImages)
     {
-        if (empty($listImages)) {
+        if (empty($content) || empty($listImages)) {
             return $content;
         }
         foreach ($listImages as $item) {
@@ -352,6 +352,27 @@ trait CrawlerFilterTrait
             );
             $newItem = '<img class="news-posts-content-image" width="100%" src="' . trim($imgSrc) . '" title="' . trim($title) . '" alt="' . trim($alt) . '" />';
             $content = str_replace($oldItem, $newItem, $content);
+        }
+        return $content;
+    }
+
+
+    public function reformatDataContentVideoYoutubeLinkInContent($content, $videoList, $matchVideoOpenTag = '<div data-oembed-url="', $matchVideoCloseTag = '"')
+    {
+        if (empty($content) || empty($videoList)) {
+            return $content;
+        }
+
+        foreach ($videoList as $oldItemHtml) {
+            $oldItemHtml = trim($oldItemHtml);
+            $youtubeID = $this->parseGetContentValueWithExplode($oldItemHtml, $matchVideoOpenTag, $matchVideoCloseTag);
+            $youtubeID = str_replace('https://youtu.be/', '', $youtubeID);
+            $youtubeID = str_replace('https://www.youtube.com/watch?v=', '', $youtubeID);
+            $youtubeID = str_replace('https://www.youtube.com/embed/', '', $youtubeID);
+            $newHtml = '<div class="news-posts-content-youtube-video" style="text-align: center;">';
+            $newHtml .= '<iframe width="560" height="315" src="https://www.youtube.com/embed/' . trim($youtubeID) . '" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>';
+            $newHtml .= '</div>';
+            $content = str_replace($oldItemHtml, $newHtml, $content);
         }
         return $content;
     }
