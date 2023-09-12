@@ -392,6 +392,7 @@ trait CrawlerFilterTrait
             '"headline": "'                                        => '"',
             '<meta id="title" name="title" content="'              => '"',
             '<meta id="Title" name="title" content="'              => '"',
+            '<meta name="og:title" content="'                      => '"',
         ];
         foreach ($checklists as $openTag => $closeTag) {
             $res = $this->parseGetContentValueWithExplodeAndStripTags($headStr, $openTag, $closeTag);
@@ -418,6 +419,7 @@ trait CrawlerFilterTrait
             '<meta id="metades" name="description" content="'         => '"',
             '<meta id="metaDescription" name="description" content="' => '"',
             '<meta id="MetaDescription" name="DESCRIPTION" content="' => '"',
+            '<meta name="og:description" content="'                   => '"',
         ];
         foreach ($checklists as $openTag => $closeTag) {
             $res = $this->parseGetContentValueWithExplodeAndStripTags($headStr, $openTag, $closeTag);
@@ -440,6 +442,7 @@ trait CrawlerFilterTrait
             '<meta id="keywords" name="keywords" content="'       => '"',
             '<meta id="MetaKeywords" name="keywords" content="'   => '"',
             '<meta id="MetaKeywords" name="KEYWORDS" content="'   => '"',
+            '<meta name="og:keywords" content="'                  => '"',
         ];
         foreach ($checklists as $openTag => $closeTag) {
             $res = $this->parseGetContentValueWithExplodeAndStripTags($headStr, $openTag, $closeTag);
@@ -462,6 +465,7 @@ trait CrawlerFilterTrait
             '<meta property="og:image" itemprop="thumbnailUrl" content="' => '"',
             '<meta property="dable:image" content="'                      => '"',
             '<link rel="image_src" href="'                                => '"',
+            '<meta name="og:image" content="'                             => '"',
         ];
         foreach ($checklists as $openTag => $closeTag) {
             $res = $this->parseGetContentValueWithExplodeAndStripTags($headStr, $openTag, $closeTag);
