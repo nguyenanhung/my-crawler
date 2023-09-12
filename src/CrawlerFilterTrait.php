@@ -356,7 +356,6 @@ trait CrawlerFilterTrait
         return $content;
     }
 
-
     public function reformatDataContentVideoYoutubeLinkInContent($content, $videoList, $matchVideoOpenTag = '<div data-oembed-url="', $matchVideoCloseTag = '"')
     {
         if (empty($content) || empty($videoList)) {
@@ -370,6 +369,13 @@ trait CrawlerFilterTrait
             $content = str_replace($oldItemHtml, $newHtml, $content);
         }
         return $content;
+    }
+
+    public function reformatDataContentAndItemScopePublisherRemoved($content = '', $openTag = '<span itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization">', $closeTag = '</span>'): string
+    {
+        $itemScopePublisher = $this->getContentDataValueFromHtmlTag($content, $openTag, $closeTag);
+        $content = str_replace($itemScopePublisher, '', $content);
+        return trim($content);
     }
 
     public function getFirstImageSrcLinkInDataContent($crawler, $filter, $openTag = 'src="', $closeTag = '"'): string
@@ -557,6 +563,84 @@ trait CrawlerFilterTrait
             '"uploadDate":"'                                  => '"',
         ];
         return $this->getDataHeadMetaTimeAndReformatFormat($headStr, $checklists);
+    }
+
+    public function crawlerHandleDetailsTextContent(Crawler $crawler, $listDefaultContentSelector = array(), $contentSelector = array())
+    {
+        if (!empty($contentSelector)) {
+            // Nếu truyền vào Content Selector
+            $inputNewsContentSelector = $contentSelector;
+            if (is_array($inputNewsContentSelector)) {
+                $requestContent = $this->crawlerHandleRequestDetailsTextContent($crawler, $inputNewsContentSelector);
+                if (!empty($requestContent) && isset($requestContent['content'])) {
+                    return $requestContent;
+                }
+                return [
+                    'selector'             => 'div.hungng-not-found-element-content',
+                    'content'              => '',
+                    'contentLink'          => '',
+                    'contentImages'        => '',
+                    'contentImageFirstUrl' => '',
+                ];
+            }
+            return [
+                'selector'             => $inputNewsContentSelector,
+                'content'              => $this->crawlerFilterGetHtml($crawler, $inputNewsContentSelector),
+                'contentLink'          => $this->crawlerFilterGetRawOuterHtml($crawler, $inputNewsContentSelector . ' a'),
+                'contentImages'        => $this->crawlerFilterGetRawOuterHtml($crawler, $inputNewsContentSelector . ' img'),
+                'contentImageFirstUrl' => $this->getFirstImageSrcLinkInDataContent($crawler, $inputNewsContentSelector),
+            ];
+        }
+
+        // Lấy Content Selector mặc định
+        $requestContent = $this->crawlerHandleRequestDetailsTextContent($crawler, $listDefaultContentSelector);
+        if (!empty($requestContent) && isset($requestContent['content'])) {
+            return $requestContent;
+        }
+        return [
+            'selector'             => 'div.hungng-not-found-element-content',
+            'content'              => '',
+            'contentLink'          => '',
+            'contentImages'        => '',
+            'contentImageFirstUrl' => '',
+        ];
+    }
+
+    public function crawlerHandleRequestDetailsTextContent(Crawler $crawler, $newsContentSelectorList = array())
+    {
+        if (empty($newsContentSelectorList)) {
+            return '';
+        }
+        foreach ($newsContentSelectorList as $selector) {
+            $content = $this->crawlerFilterGetHtml($crawler, $selector);
+            if (!empty($content)) {
+                $contentLink = $this->crawlerFilterGetRawOuterHtml($crawler, $selector . ' a');
+                $contentImages = $this->crawlerFilterGetRawOuterHtml($crawler, $selector . ' img');
+                $imageFirstUrl = $this->getFirstImageSrcLinkInDataContent($crawler, $selector);
+                return [
+                    'selector'             => $selector,
+                    'content'              => $content,
+                    'contentLink'          => $contentLink,
+                    'contentImages'        => $contentImages,
+                    'contentImageFirstUrl' => $imageFirstUrl,
+                ];
+            }
+        }
+        return '';
+    }
+
+    public function crawlerHandleRequestSapoTextContent(Crawler $crawler, $sapoSelectorList = array()): string
+    {
+        if (empty($sapoSelectorList)) {
+            return '';
+        }
+        foreach ($sapoSelectorList as $selector) {
+            $sapo = $this->getDataContentSapoText($crawler, $selector);
+            if (!empty($sapo)) {
+                return trim($sapo);
+            }
+        }
+        return '';
     }
 
     public function getDataContentSapoText(Crawler $crawler, $sapoFilter, $replace = ''): string
