@@ -657,4 +657,274 @@ trait CrawlerFilterTrait
         }
         return trim($sapoText);
     }
+
+    ////////////////////// ALIAS METHOD //////////////////////
+    protected function crawlerFilterText(Crawler $crawler, $filter = ''): string
+    {
+        return $this->crawlerFilterGetText($crawler, $filter);
+    }
+
+    protected function crawlerFilterRawText(Crawler $crawler, $filter = ''): array
+    {
+        return $this->crawlerFilterGetRawText($crawler, $filter);
+    }
+
+    protected function crawlerFilterHtml(Crawler $crawler, $filter = ''): string
+    {
+        return $this->crawlerFilterGetHtml($crawler, $filter);
+    }
+
+    protected function crawlerFilterRawHtml(Crawler $crawler, $filter = ''): array
+    {
+        return $this->crawlerFilterGetRawHtml($crawler, $filter);
+    }
+
+    protected function crawlerFilterRawOuterHtml(Crawler $crawler, $filter = ''): array
+    {
+        return $this->crawlerFilterGetRawOuterHtml($crawler, $filter);
+    }
+
+    protected function crawlerHtmlEmbedContentRemoved($contentText, Crawler $crawler, $filter = ''): string
+    {
+        return $this->crawlerReformatContentRemovedWithFilter($crawler, $contentText, $filter);
+    }
+
+    protected function parseHtmlHeader(Crawler $crawler): array
+    {
+        return $this->crawlerFilterRawHtml($crawler, 'head');
+    }
+
+    protected function parseHtmlBody(Crawler $crawler): array
+    {
+        return $this->crawlerFilterRawHtml($crawler, 'body');
+    }
+
+    protected function filterScriptJsonStructureDataFromHtml($html): array
+    {
+        return $this->getDataFilterScriptJsonStructureDataFromHtml($html);
+    }
+
+    protected function getContentValueWithRegexMatch(string $txt = '', string $openTag = '', string $closeTag = '')
+    {
+        return $this->getContentDataValueWithRegexMatch($txt, $openTag, $closeTag);
+    }
+
+    protected function getContentValueWithRegexMatchAll(string $txt = '', string $openTag = '', string $closeTag = '')
+    {
+
+        return $this->getContentDataValueWithRegexMatchAll($txt, $openTag, $closeTag);
+    }
+
+    protected function getContentValueFromHtmlTag(string $txt = '', string $openTag = '', string $closeTag = ''): string
+    {
+        return $this->getContentDataValueFromHtmlTag($txt, $openTag, $closeTag);
+    }
+
+    protected function tagClassNameRemoved($html, $tag, $classname = '')
+    {
+        return $this->filterTagClassNameRemoved($html, $tag, $classname);
+    }
+
+    protected function scriptTagRemoved($html)
+    {
+        return $this->filterScriptTagRemoved($html);
+    }
+
+    protected function cssStyleTagRemoved($html)
+    {
+        return $this->filterCssStyleTagRemoved($html);
+    }
+
+    protected function divTagClassNameRemoved($html, $classname = '')
+    {
+        return $this->tagClassNameRemoved($html, 'div', $classname);
+    }
+
+    protected function insTagClassNameRemoved($html, $classname = '')
+    {
+        return $this->tagClassNameRemoved($html, 'ins', $classname);
+    }
+
+    protected function htmlEmbedContentRemoved($contentText = '', $cmsEmbedContent = array()): string
+    {
+        foreach ($cmsEmbedContent as $embedContent) {
+            $contentText = str_replace($embedContent, "", $contentText);
+        }
+        return trim($contentText);
+    }
+
+    protected function getContentValueWithDoubleExplodeAndStripTags($str, $openTag, $closeTag, $nextOpenTag, $nextCloseTag): string
+    {
+        return $this->parseGetContentValueWithDoubleExplodeAndStripTags($str, $openTag, $closeTag, $nextOpenTag, $nextCloseTag);
+    }
+
+    protected function getContentValueWithExplodeAndStripTags($str, $openTag, $closeTag): string
+    {
+        return $this->parseGetContentValueWithExplodeAndStripTags($str, $openTag, $closeTag);
+    }
+
+    protected function getContentValueWithDoubleExplode($str, $openTag, $closeTag, $nextOpenTag, $nextCloseTag): string
+    {
+        return $this->parseGetContentValueWithDoubleExplode($str, $openTag, $closeTag, $nextOpenTag, $nextCloseTag);
+    }
+
+    protected function getContentValueWithExplode($str, $openTag, $closeTag): string
+    {
+        return $this->parseGetContentValueWithExplode($str, $openTag, $closeTag);
+    }
+
+    protected function simpleGetHeadMetaValueStripTags($str, $openTag, $closeTag): string
+    {
+        return $this->getContentValueWithExplodeAndStripTags($str, $openTag, $closeTag);
+    }
+
+    protected function simpleGetHeadMetaValue($str, $openTag, $closeTag): string
+    {
+        return $this->getContentValueWithExplode($str, $openTag, $closeTag);
+    }
+
+    protected function getHeadPageTitle($str, $headline = ''): string
+    {
+        return $this->crawlerGetDataHeadPageTitle($str, $headline);
+    }
+
+    protected function reformatContentWithFilterHtmlTag($contentText = '', $filterHtmlTag = '')
+    {
+        return $this->reformatDataContentWithFilterHtmlTag($contentText, $filterHtmlTag);
+    }
+
+    protected function reformatAddSiteUrlIntoContent($contentText = '', $siteUrl = '', $match = '')
+    {
+        return $this->reformatDataAndAddSiteUrlIntoContent($contentText, $siteUrl, $match);
+    }
+
+    protected function reformatContentRemovedLinkHref($contentText, $listLinks)
+    {
+        return $this->reformatDataContentAndRemovedLinkHrefWithRegex($contentText, $listLinks);
+    }
+
+    protected function reformatContentLinkImages($contentText, $listLinks)
+    {
+        return $this->reformatDataContentImageLinkInContent($contentText, $listLinks);
+    }
+
+    protected function reformatContentYoutubeVideo($contentText, $listLinks)
+    {
+        return $this->reformatDataContentVideoYoutubeLinkInContent($contentText, $listLinks);
+    }
+
+    protected function getFirstImageLinkInContent($crawler, $filter, $openTag = 'src="', $closeTag = '"'): string
+    {
+        return $this->getFirstImageSrcLinkInDataContent($crawler, $filter, $openTag, $closeTag);
+    }
+
+    protected function getHeadMetaImageSrc($str, $start = '<meta property="og:image" content="', $end = '"'): string
+    {
+        $openTag = empty($start) ? '<meta property="og:image" content="' : $start;
+        $closeTag = empty($end) ? '"' : $end;
+        return $this->simpleGetHeadMetaValue($str, $openTag, $closeTag);
+    }
+
+    protected function getHeadMetaImageSrcThumbnailUrl($str, $start = '<meta property="og:image" itemprop="thumbnailUrl" content="', $end = '"'): string
+    {
+        $openTag = empty($start) ? '<meta property="og:image" itemprop="thumbnailUrl" content="' : $start;
+        $closeTag = empty($end) ? '"' : $end;
+        return $this->simpleGetHeadMetaValue($str, $openTag, $closeTag);
+    }
+
+    protected function getHeadMetaPageTitle($str, $start = '<meta property="og:title" content="', $end = '"'): string
+    {
+        $openTag = empty($start) ? '<meta property="og:title" content="' : $start;
+        $closeTag = empty($end) ? '"' : $end;
+        return $this->simpleGetHeadMetaValue($str, $openTag, $closeTag);
+    }
+
+    protected function getHeadMetaDescription($str, $start = '<meta property="og:description" content="', $end = '"'): string
+    {
+        $openTag = empty($start) ? '<meta property="og:description" content="' : $start;
+        $closeTag = empty($end) ? '"' : $end;
+        return $this->simpleGetHeadMetaValue($str, $openTag, $closeTag);
+    }
+
+    protected function getHeadMetaKeywords($str, $start = '<meta name="keywords" content="', $end = '"'): string
+    {
+        $openTag = empty($start) ? '<meta name="keywords" content="' : $start;
+        $closeTag = empty($end) ? '"' : $end;
+        return $this->simpleGetHeadMetaValue($str, $openTag, $closeTag);
+    }
+
+    protected function getHeadMetaNewsKeywords($str, $start = '<meta name="news_keywords" content="', $end = '"'): string
+    {
+        $openTag = empty($start) ? '<meta name="news_keywords" content="' : $start;
+        $closeTag = empty($end) ? '"' : $end;
+        return $this->simpleGetHeadMetaValue($str, $openTag, $closeTag);
+    }
+
+    protected function getHeadMetaItemPropKeywords($str, $start = '<meta itemprop="keywords" name="keywords" content="', $end = '"'): string
+    {
+        $openTag = empty($start) ? '<meta itemprop="keywords" name="keywords" content="' : $start;
+        $closeTag = empty($end) ? '"' : $end;
+        return $this->simpleGetHeadMetaValue($str, $openTag, $closeTag);
+    }
+
+    protected function getHeadMetaArticleTag($str, $start = '<meta property="article:tag" content="', $end = '"'): string
+    {
+        $openTag = empty($start) ? '<meta property="article:tag" content="' : $start;
+        $closeTag = empty($end) ? '"' : $end;
+        return $this->simpleGetHeadMetaValue($str, $openTag, $closeTag);
+    }
+
+    protected function getHeadMetaArticleTitle($str, $start = '<meta property="og:title" content="', $end = '"'): string
+    {
+        $openTag = empty($start) ? '<meta property="og:title" content="' : $start;
+        $closeTag = empty($end) ? '"' : $end;
+        return $this->simpleGetHeadMetaValue($str, $openTag, $closeTag);
+    }
+
+    protected function getHeadMetaArticlePublishedTime($str, $start = '<meta property="article:published_time" content="', $end = '"'): string
+    {
+        $openTag = empty($start) ? '<meta property="article:published_time" content="' : $start;
+        $closeTag = empty($end) ? '"' : $end;
+        return $this->simpleGetHeadMetaValue($str, $openTag, $closeTag);
+    }
+
+    protected function getHeadMetaArticleModifiedTime($str, $start = '<meta property="article:modified_time" content="', $end = '"'): string
+    {
+        $openTag = empty($start) ? '<meta property="article:modified_time" content="' : $start;
+        $closeTag = empty($end) ? '"' : $end;
+        return $this->simpleGetHeadMetaValue($str, $openTag, $closeTag);
+    }
+
+    protected function getHeadMetaArticleSchemaHeadline($str, $start = '"headline":"', $end = '"'): string
+    {
+        $openTag = empty($start) ? '"headline":"' : $start;
+        $closeTag = empty($end) ? '"' : $end;
+        return $this->simpleGetHeadMetaValue($str, $openTag, $closeTag);
+    }
+
+    protected function getHeadMetaArticleSchemaDescription($str, $start = '"description":"', $end = '"'): string
+    {
+        $openTag = empty($start) ? '"description":"' : $start;
+        $closeTag = empty($end) ? '"' : $end;
+        return $this->simpleGetHeadMetaValue($str, $openTag, $closeTag);
+    }
+
+    protected function getHeadMetaArticleSchemaPublishedTime($str, $start = '"datePublished":"', $end = '"'): string
+    {
+        $openTag = empty($start) ? '"datePublished":"' : $start;
+        $closeTag = empty($end) ? '"' : $end;
+        return $this->simpleGetHeadMetaValue($str, $openTag, $closeTag);
+    }
+
+    protected function getHeadMetaArticleSchemaModifiedTime($str, $start = '"dateModified":"', $end = '"'): string
+    {
+        $openTag = empty($start) ? '"dateModified":"' : $start;
+        $closeTag = empty($end) ? '"' : $end;
+        return $this->simpleGetHeadMetaValue($str, $openTag, $closeTag);
+    }
+
+    protected function itemScopePublisherRemoved($contentText = ''): string
+    {
+        return $this->reformatDataContentAndItemScopePublisherRemoved($contentText);
+    }
 }
