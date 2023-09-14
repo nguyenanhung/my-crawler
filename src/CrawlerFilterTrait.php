@@ -72,18 +72,20 @@ trait CrawlerFilterTrait
 
     public function crawlerGetDataHeadPageTitle($str, $headline = ''): string
     {
-        $explode = explode('<title>', $str);
-        if (isset($explode[1])) {
-            $explode = explode('</title>', $explode[1]);
-            if (isset($explode[0]) && !empty($explode[0])) {
-                $title = trim($explode[0]);
+        $listTitleTags = [
+            '<title>'            => '</title>',
+            '<title id="title">' => '</title>',
+        ];
+        foreach ($listTitleTags as $openTag => $closeTag) {
+            $text = $this->getContentValueWithExplodeAndStripTags($str, $openTag, $closeTag);
+            if (!empty($text)) {
+                $text = str_replace(array('<', '>'), '', $text);
                 if (!empty($headline)) {
-                    $title = str_replace($headline, '', $title);
+                    $text = str_replace($headline, '', $text);
                 }
-                return trim($title);
+                return trim($text);
             }
         }
-
         return '';
     }
 
@@ -427,6 +429,8 @@ trait CrawlerFilterTrait
             '<meta itemprop="title" content=\''                     => "'",
             '<meta property="og:title" content="'                   => '"',
             '<meta property="og:title" content=\''                  => "'",
+            '<meta itemprop="name" property="og:title" content="'   => '"',
+            '<meta itemprop="name" property="og:title" content=\''  => "'",
             '<meta name="twitter:title" content="'                  => '"',
             '<meta name="twitter:title" content=\''                 => "'",
             '<meta property="og:title" itemprop="title" content="'  => '"',
