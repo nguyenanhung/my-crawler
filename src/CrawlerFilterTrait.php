@@ -622,6 +622,7 @@ trait CrawlerFilterTrait
                     'contentLink' => '',
                     'contentImages' => '',
                     'contentImageFirstUrl' => '',
+                    'contentFigureMedia' => '',
                 ];
             }
             return [
@@ -630,6 +631,7 @@ trait CrawlerFilterTrait
                 'contentLink' => $this->crawlerFilterGetRawOuterHtml($crawler, $inputNewsContentSelector . ' a'),
                 'contentImages' => $this->crawlerFilterGetRawOuterHtml($crawler, $inputNewsContentSelector . ' img'),
                 'contentImageFirstUrl' => $this->getFirstImageSrcLinkInDataContent($crawler, $inputNewsContentSelector),
+                'contentFigureMedia' => $this->crawlerFilterGetRawOuterHtml($crawler, $inputNewsContentSelector . ' figure.media'),
             ];
         }
 
@@ -644,6 +646,7 @@ trait CrawlerFilterTrait
             'contentLink' => '',
             'contentImages' => '',
             'contentImageFirstUrl' => '',
+            'contentFigureMedia' => '',
         ];
     }
 
@@ -657,6 +660,7 @@ trait CrawlerFilterTrait
             if (!empty($content)) {
                 $contentLink = $this->crawlerFilterGetRawOuterHtml($crawler, $selector . ' a');
                 $contentImages = $this->crawlerFilterGetRawOuterHtml($crawler, $selector . ' img');
+                $contentFigureMedia = $this->crawlerFilterGetRawOuterHtml($crawler, $selector . ' figure.media');
                 $imageFirstUrl = $this->getFirstImageSrcLinkInDataContent($crawler, $selector);
                 return [
                     'selector' => $selector,
@@ -664,6 +668,7 @@ trait CrawlerFilterTrait
                     'contentLink' => $contentLink,
                     'contentImages' => $contentImages,
                     'contentImageFirstUrl' => $imageFirstUrl,
+                    'contentFigureMedia' => $contentFigureMedia,
                 ];
             }
         }
