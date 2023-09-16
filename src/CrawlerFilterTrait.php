@@ -682,6 +682,27 @@ trait CrawlerFilterTrait
         return $content;
     }
 
+    public function reformatDataContentDivPhotoToFigureImageLinkInContent($content, $listImages)
+    {
+        if (empty($content) || empty($listImages)) {
+            return $content;
+        }
+        foreach ($listImages as $item) {
+            $oldItem = trim($item);
+            $title = $this->parseGetContentValueWithExplodeAndStripTags($oldItem, 'title="', '"');
+            $alt = $this->parseGetContentValueWithExplodeAndStripTags($oldItem, 'alt="', '"');
+            $caption = $this->handlePrepareDataContentFigureFigcaptionInContent($oldItem);
+            if (empty($caption)) {
+                $caption = $this->handlePrepareDataContentDivPhotoCMSCaptionInContent($oldItem);
+            }
+            $imgSrc = $this->parseMatchesImageSrcFromChecklists($oldItem, $this->handleDefaultListMatchesImageSrcFromChecklists());
+            $newItem = _crawler_convert_image_src_from_url_($imgSrc, $title, $alt);
+            $newItem = _crawler_convert_figure_only_fi_img_($newItem, $caption);
+            $content = str_replace($oldItem, $newItem, $content);
+        }
+        return $content;
+    }
+
     public function reformatDataContentFigureDivImageLinkInContent($content, $listImages)
     {
         if (empty($content) || empty($listImages)) {
