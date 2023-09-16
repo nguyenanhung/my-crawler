@@ -674,7 +674,7 @@ trait CrawlerFilterTrait
         return $content;
     }
 
-    public function reformatDataContentFigureExpNoEditDivFiImageLinkInContent($content, $listImages)
+    public function reformatDataContentFigureDivImageLinkInContent($content, $listImages)
     {
         if (empty($content) || empty($listImages)) {
             return $content;
@@ -683,9 +683,13 @@ trait CrawlerFilterTrait
             $oldItem = trim($item);
             $title = $this->parseGetContentValueWithExplodeAndStripTags($oldItem, 'title="', '"');
             $alt = $this->parseGetContentValueWithExplodeAndStripTags($oldItem, 'alt="', '"');
+            $caption = $this->getContentValueWithExplode($content, '<figcaption', '</figcaption');
+            $caption = '<figcaption ' . $caption;
+            $caption = strip_tags($caption);
+            $figureCaption = '<figcaption class="figure-bear-news-cms-photo-caption"><p data-placeholder="' . trim($caption) . '">' . trim($caption) . '</p></figcaption>';
             $imgSrc = $this->parseMatchesImageSrcFromChecklists($oldItem, $this->handleDefaultListMatchesImageSrcFromChecklists());
             $newItem = _crawler_convert_image_src_from_url_($imgSrc, $title, $alt);
-            $newItem = _crawler_convert_figure_only_fi_img_($newItem);
+            $newItem = _crawler_convert_figure_only_fi_img_($newItem, $figureCaption);
             $content = str_replace($oldItem, $newItem, $content);
         }
         return $content;
@@ -985,7 +989,7 @@ trait CrawlerFilterTrait
 
     public function reformatContentFigureDivFiImgLinkImages($contentText, $listLinks)
     {
-        return $this->reformatDataContentFigureExpNoEditDivFiImageLinkInContent($contentText, $listLinks);
+        return $this->reformatDataContentFigureDivImageLinkInContent($contentText, $listLinks);
     }
 
     public function reformatContentYoutubeVideo($contentText, $listLinks)
