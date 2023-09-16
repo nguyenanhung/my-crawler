@@ -975,6 +975,11 @@ trait CrawlerFilterTrait
         return $this->reformatDataContentImageLinkInContent($contentText, $listLinks);
     }
 
+    public function reformatContentFigureDivFiImgLinkImages($contentText, $listLinks)
+    {
+        return $this->reformatDataContentFigureExpNoEditDivFiImageLinkInContent($contentText, $listLinks);
+    }
+
     public function reformatContentYoutubeVideo($contentText, $listLinks)
     {
         return $this->reformatDataContentVideoYoutubeLinkInContent($contentText, $listLinks);
