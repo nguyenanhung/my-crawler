@@ -26,6 +26,9 @@
         "ext-mbstring": "*",
         "fabpot/goutte": "^4.0 || ^3.0 || ^2.0 || ^1.0"
     },
+    "require-dev": {
+        "nguyenanhung/helpers": "^3.0"
+    },
     "autoload": {
         "psr-4": {
             "nguyenanhung\\Libraries\\Crawler\\": "src/"

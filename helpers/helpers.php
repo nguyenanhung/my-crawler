@@ -32,7 +32,28 @@ if (!function_exists('_crawler_convert_image_src_from_url_')) {
 if (!function_exists('_crawler_convert_figure_only_fi_img_')) {
     function _crawler_convert_figure_only_fi_img_($html = '', $figureCaption = ''): string
     {
-        $newHtml = '<figure class="media-image-photo figure-bear-news-cms-content"><div class="fi-img bear-news-cms-content">' . trim($html) . '</div>' . trim($figureCaption) . '</figure>';
+        $newHtml = '<figure class="figure-media-image-photo figure-bear-news-cms-content"><div class="fi-img bear-news-cms-content">' . trim($html) . '</div>' . trim($figureCaption) . '</figure>';
+        return trim($newHtml);
+    }
+}
+if (!function_exists('_crawler_convert_div_only_fi_img_')) {
+    function _crawler_convert_div_only_fi_img_($html = '', $figureCaption = ''): string
+    {
+        $newHtml = '<div class="figure-media-image-photo figure-bear-news-cms-content"><div class="fi-img bear-news-cms-content">' . trim($html) . '</div>' . trim($figureCaption) . '</div>';
+        return trim($newHtml);
+    }
+}
+if (!function_exists('_crawler_convert_figure_figcaption_')) {
+    function _crawler_convert_figure_figcaption_($html = ''): string
+    {
+        $newHtml = '<figcaption class="figure-bear-news-cms-photo-caption"><p data-placeholder="' . escapeHtml(trim($html)) . '">' . trim($html) . '</p></figcaption>';
+        return trim($newHtml);
+    }
+}
+if (!function_exists('_crawler_convert_div_figcaption_')) {
+    function _crawler_convert_div_figcaption_($html = ''): string
+    {
+        $newHtml = '<div class="figure-bear-news-cms-photo-caption"><p data-placeholder="' . escapeHtml(trim($html)) . '">' . trim($html) . '</p></div>';
         return trim($newHtml);
     }
 }

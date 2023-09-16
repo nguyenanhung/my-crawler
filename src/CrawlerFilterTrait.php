@@ -683,18 +683,22 @@ trait CrawlerFilterTrait
             $oldItem = trim($item);
             $title = $this->parseGetContentValueWithExplodeAndStripTags($oldItem, 'title="', '"');
             $alt = $this->parseGetContentValueWithExplodeAndStripTags($oldItem, 'alt="', '"');
-
-            $checkCaption = $this->getContentValueWithExplode($content, '<figcaption', '</figcaption');
-            $addFigcaption = '<figcaption ' . $checkCaption;
-            $caption = strip_tags($addFigcaption);
-            $figureCaption = '<figcaption class="figure-bear-news-cms-photo-caption"><p data-placeholder="' . trim($caption) . '">' . trim($caption) . '</p></figcaption>';
-
+            $caption = $this->handlePrepareDataContentFigureFigcaptionInContent($oldItem);
             $imgSrc = $this->parseMatchesImageSrcFromChecklists($oldItem, $this->handleDefaultListMatchesImageSrcFromChecklists());
             $newItem = _crawler_convert_image_src_from_url_($imgSrc, $title, $alt);
-            $newItem = _crawler_convert_figure_only_fi_img_($newItem, $figureCaption);
+            $newItem = _crawler_convert_figure_only_fi_img_($newItem, $caption);
             $content = str_replace($oldItem, $newItem, $content);
         }
         return $content;
+    }
+
+    public function handlePrepareDataContentFigureFigcaptionInContent($oldItem = ''): string
+    {
+        $caption = $this->getContentValueWithExplode($oldItem, '<figcaption', '</figcaption');
+        $caption = '<figcaption ' . $caption;
+        $caption = strip_tags($caption);
+        $figureCaption = _crawler_convert_figure_figcaption_($caption);
+        return trim($figureCaption);
     }
 
     // Parse + Handle Content Video Youtube in Body Content
