@@ -31,6 +31,35 @@ trait CrawlerHandleImageSrcContentTrait
         );
     }
 
+    public function handleRequestPrepareDataContentFigureFigcaptionInContent($oldItem = ''): string
+    {
+        $caption = $this->getContentValueWithExplode($oldItem, '<figcaption', '</figcaption');
+        $caption = '<figcaption ' . $caption;
+        $caption = strip_tags($caption);
+        return trim($caption);
+    }
+
+    public function handlePrepareDataContentFigureFigcaptionInContent($oldItem = ''): string
+    {
+        $caption = $this->handleRequestPrepareDataContentFigureFigcaptionInContent($oldItem);
+        $figureCaption = _crawler_convert_figure_figcaption_($caption);
+        return trim($figureCaption);
+    }
+
+    public function handleRequestPrepareDataContentDivPhotoCMSCaptionInContent($oldItem = ''): string
+    {
+        $caption = $this->getContentValueWithExplode($oldItem, ' <div class="PhotoCMS_Caption">', '</div>');
+        $caption = strip_tags($caption);
+        return trim($caption);
+    }
+
+    public function handlePrepareDataContentDivPhotoCMSCaptionInContent($oldItem = ''): string
+    {
+        $caption = $this->handleRequestPrepareDataContentDivPhotoCMSCaptionInContent($oldItem);
+        $figureCaption = _crawler_convert_div_figcaption_($caption);
+        return trim($figureCaption);
+    }
+
     public function reformatDataContentImageLinkInContent($content, $listImages)
     {
         if (empty($content) || empty($listImages)) {
@@ -104,34 +133,5 @@ trait CrawlerHandleImageSrcContentTrait
             $content = str_replace($oldItem, $newItem, $content);
         }
         return $content;
-    }
-
-    public function handleRequestPrepareDataContentFigureFigcaptionInContent($oldItem = ''): string
-    {
-        $caption = $this->getContentValueWithExplode($oldItem, '<figcaption', '</figcaption');
-        $caption = '<figcaption ' . $caption;
-        $caption = strip_tags($caption);
-        return trim($caption);
-    }
-
-    public function handlePrepareDataContentFigureFigcaptionInContent($oldItem = ''): string
-    {
-        $caption = $this->handleRequestPrepareDataContentFigureFigcaptionInContent($oldItem);
-        $figureCaption = _crawler_convert_figure_figcaption_($caption);
-        return trim($figureCaption);
-    }
-
-    public function handleRequestPrepareDataContentDivPhotoCMSCaptionInContent($oldItem = ''): string
-    {
-        $caption = $this->getContentValueWithExplode($oldItem, ' <div class="PhotoCMS_Caption">', '</div>');
-        $caption = strip_tags($caption);
-        return trim($caption);
-    }
-
-    public function handlePrepareDataContentDivPhotoCMSCaptionInContent($oldItem = ''): string
-    {
-        $caption = $this->handleRequestPrepareDataContentDivPhotoCMSCaptionInContent($oldItem);
-        $figureCaption = _crawler_convert_div_figcaption_($caption);
-        return trim($figureCaption);
     }
 }
