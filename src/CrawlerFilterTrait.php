@@ -101,6 +101,18 @@ trait CrawlerFilterTrait
         return trim($content);
     }
 
+    public function crawlerReformatContentRemovedWithFilterOuterHtml(Crawler $crawler, $content, $filterRemoved = ''): string
+    {
+        if (empty($filterRemoved)) {
+            return $content;
+        }
+        $ads = $this->crawlerFilterRawOuterHtml($crawler, $filterRemoved);
+        foreach ($ads as $ad) {
+            $content = str_replace($ad, "", $content);
+        }
+        return trim($content);
+    }
+
     public function getDataFilterScriptJsonStructureDataFromHtml($html): array
     {
         $openTag = '<script type="application/ld+json">';
@@ -731,6 +743,11 @@ trait CrawlerFilterTrait
     public function crawlerHtmlEmbedContentRemoved($contentText, Crawler $crawler, $filter = ''): string
     {
         return $this->crawlerReformatContentRemovedWithFilter($crawler, $contentText, $filter);
+    }
+
+    public function crawlerHtmlEmbedContentOuterHtmlRemoved($contentText, Crawler $crawler, $filter = ''): string
+    {
+        return $this->crawlerReformatContentRemovedWithFilterOuterHtml($crawler, $contentText, $filter);
     }
 
     public function parseHtmlHeader(Crawler $crawler): array
