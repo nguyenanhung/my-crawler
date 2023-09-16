@@ -519,23 +519,27 @@ trait CrawlerFilterTrait
                 return [
                     'selector' => 'div.hungng-not-found-element-content',
                     'content' => '',
+                    'contentImageFirstUrl' => '',
                     'contentLink' => '',
                     'contentImages' => '',
                     'contentFigureMedia' => '',
                     'contentFigureExpNoEditFiImg' => '',
                     'contentFigureExpNoEditFiImgSrc' => '',
-                    'contentImageFirstUrl' => '',
+                    'contentFigureVCSortableInPreviewModeNoCaption' => '',
+                    'contentFigureVCSortableInPreviewMode' => '',
                 ];
             }
             return [
                 'selector' => $inputNewsContentSelector,
                 'content' => $this->crawlerFilterGetHtml($crawler, $inputNewsContentSelector),
+                'contentImageFirstUrl' => $this->getFirstImageSrcLinkInDataContent($crawler, $inputNewsContentSelector),
                 'contentLink' => $this->crawlerFilterGetRawOuterHtml($crawler, $inputNewsContentSelector . ' a'),
                 'contentImages' => $this->crawlerFilterGetRawOuterHtml($crawler, $inputNewsContentSelector . ' img'),
                 'contentFigureMedia' => $this->crawlerFilterGetRawOuterHtml($crawler, $inputNewsContentSelector . ' figure.media'),
                 'contentFigureExpNoEditFiImg' => $this->crawlerFilterGetRawOuterHtml($crawler, $inputNewsContentSelector . ' figure.expNoEdit div.fi-img'),
                 'contentFigureExpNoEditFiImgSrc' => $this->crawlerFilterGetRawOuterHtml($crawler, $inputNewsContentSelector . ' figure.expNoEdit div.fi-img img'),
-                'contentImageFirstUrl' => $this->getFirstImageSrcLinkInDataContent($crawler, $inputNewsContentSelector),
+                'contentFigureVCSortableInPreviewModeNoCaption' => $this->crawlerFilterGetRawOuterHtml($crawler, $inputNewsContentSelector . ' figure.VCSortableInPreviewMode.noCaption'),
+                'contentFigureVCSortableInPreviewMode' => $this->crawlerFilterGetRawOuterHtml($crawler, $inputNewsContentSelector . ' figure.VCSortableInPreviewMode'),
             ];
         }
 
@@ -547,12 +551,14 @@ trait CrawlerFilterTrait
         return [
             'selector' => 'div.hungng-not-found-element-content',
             'content' => '',
+            'contentImageFirstUrl' => '',
             'contentLink' => '',
             'contentImages' => '',
             'contentFigureMedia' => '',
             'contentFigureExpNoEditFiImg' => '',
             'contentFigureExpNoEditFiImgSrc' => '',
-            'contentImageFirstUrl' => '',
+            'contentFigureVCSortableInPreviewModeNoCaption' => '',
+            'contentFigureVCSortableInPreviewMode' => '',
         ];
     }
 
@@ -567,12 +573,14 @@ trait CrawlerFilterTrait
                 return [
                     'selector' => $selector,
                     'content' => $content,
+                    'contentImageFirstUrl' => $this->getFirstImageSrcLinkInDataContent($crawler, $selector),
                     'contentLink' => $this->crawlerFilterGetRawOuterHtml($crawler, $selector . ' a'),
                     'contentImages' => $this->crawlerFilterGetRawOuterHtml($crawler, $selector . ' img'),
                     'contentFigureMedia' => $this->crawlerFilterGetRawOuterHtml($crawler, $selector . ' figure.media'),
                     'contentFigureExpNoEditFiImg' => $this->crawlerFilterGetRawOuterHtml($crawler, $selector . ' figure.expNoEdit div.fi-img'),
                     'contentFigureExpNoEditFiImgSrc' => $this->crawlerFilterGetRawOuterHtml($crawler, $selector . ' figure.expNoEdit div.fi-img img'),
-                    'contentImageFirstUrl' => $this->getFirstImageSrcLinkInDataContent($crawler, $selector),
+                    'contentFigureVCSortableInPreviewModeNoCaption' => $this->crawlerFilterGetRawOuterHtml($crawler, $selector . ' figure.VCSortableInPreviewMode.noCaption'),
+                    'contentFigureVCSortableInPreviewMode' => $this->crawlerFilterGetRawOuterHtml($crawler, $selector . ' figure.VCSortableInPreviewMode'),
                 ];
             }
         }
