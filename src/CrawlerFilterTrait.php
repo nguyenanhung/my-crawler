@@ -938,25 +938,6 @@ trait CrawlerFilterTrait
         return $this->reformatDataContentAndRemovedLinkHrefWithRegex($contentText, $listLinks);
     }
 
-    public function reformatContentLinkImages($contentText, $listLinks)
-    {
-        return $this->reformatDataContentImageLinkInContent($contentText, $listLinks);
-    }
-
-    public function reformatContentDivPhotoToFigureLinkImages($contentText, $listLinks)
-    {
-        return $this->reformatDataContentDivPhotoToFigureImageLinkInContent($contentText, $listLinks);
-    }
-
-    public function reformatContentFigureDivFiImgLinkImages($contentText, $listLinks)
-    {
-        return $this->reformatDataContentFigureDivImageLinkInContent($contentText, $listLinks);
-    }
-
-    public function reformatContentDivPhotoCMSLinkImages($contentText, $listLinks)
-    {
-        return $this->reformatDataContentDivPhotoCMSImageLinkInContent($contentText, $listLinks);
-    }
 
     public function reformatContentYoutubeVideo($contentText, $listLinks)
     {

@@ -60,6 +60,7 @@ trait CrawlerHandleImageSrcContentTrait
         return trim($figureCaption);
     }
 
+    // Reformat
     public function reformatDataContentImageLinkInContent($content, $listImages)
     {
         if (empty($content) || empty($listImages)) {
@@ -133,5 +134,26 @@ trait CrawlerHandleImageSrcContentTrait
             $content = str_replace($oldItem, $newItem, $content);
         }
         return $content;
+    }
+
+    // Alias
+    public function reformatContentLinkImages($contentText, $listLinks)
+    {
+        return $this->reformatDataContentImageLinkInContent($contentText, $listLinks);
+    }
+
+    public function reformatContentDivPhotoToFigureLinkImages($contentText, $listLinks)
+    {
+        return $this->reformatDataContentDivPhotoToFigureImageLinkInContent($contentText, $listLinks);
+    }
+
+    public function reformatContentFigureDivFiImgLinkImages($contentText, $listLinks)
+    {
+        return $this->reformatDataContentFigureDivImageLinkInContent($contentText, $listLinks);
+    }
+
+    public function reformatContentDivPhotoCMSLinkImages($contentText, $listLinks)
+    {
+        return $this->reformatDataContentDivPhotoCMSImageLinkInContent($contentText, $listLinks);
     }
 }
