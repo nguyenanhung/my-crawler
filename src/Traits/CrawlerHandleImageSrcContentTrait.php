@@ -86,8 +86,10 @@ trait CrawlerHandleImageSrcContentTrait
             $title = $this->parseGetContentValueWithExplodeAndStripTags($oldItem, 'title="', '"');
             $alt = $this->parseGetContentValueWithExplodeAndStripTags($oldItem, 'alt="', '"');
             $imgSrc = $this->parseMatchesImageSrcFromChecklists($oldItem, $this->handleDefaultListMatchesImageSrcFromChecklists());
+
             $newItem = _crawler_convert_image_src_from_url_($imgSrc, $title, $alt);
             $content = str_replace($oldItem, $newItem, $content);
+
         }
         return $content;
     }
@@ -106,9 +108,11 @@ trait CrawlerHandleImageSrcContentTrait
                 $caption = $this->handleRequestPrepareDataContentDivPhotoCMSCaptionInContent($oldItem);
             }
             $imgSrc = $this->parseMatchesImageSrcFromChecklists($oldItem, $this->handleDefaultListMatchesImageSrcFromChecklists());
-            $newItem = _crawler_convert_image_src_from_url_($imgSrc, $title, $alt);
-            $newItem = _crawler_convert_figure_only_fi_img_($newItem, _crawler_convert_figure_figcaption_($caption));
-            $content = str_replace($oldItem, $newItem, $content);
+            if (!empty($imgSrc)) {
+                $newItem = _crawler_convert_image_src_from_url_($imgSrc, $title, $alt);
+                $newItem = _crawler_convert_figure_only_fi_img_($newItem, _crawler_convert_figure_figcaption_($caption));
+                $content = str_replace($oldItem, $newItem, $content);
+            }
         }
         return $content;
     }
@@ -124,9 +128,11 @@ trait CrawlerHandleImageSrcContentTrait
             $alt = $this->parseGetContentValueWithExplodeAndStripTags($oldItem, 'alt="', '"');
             $caption = $this->handlePrepareDataContentFigureFigcaptionInContent($oldItem);
             $imgSrc = $this->parseMatchesImageSrcFromChecklists($oldItem, $this->handleDefaultListMatchesImageSrcFromChecklists());
-            $newItem = _crawler_convert_image_src_from_url_($imgSrc, $title, $alt);
-            $newItem = _crawler_convert_figure_only_fi_img_($newItem, $caption);
-            $content = str_replace($oldItem, $newItem, $content);
+            if (!empty($imgSrc)) {
+                $newItem = _crawler_convert_image_src_from_url_($imgSrc, $title, $alt);
+                $newItem = _crawler_convert_figure_only_fi_img_($newItem, $caption);
+                $content = str_replace($oldItem, $newItem, $content);
+            }
         }
         return $content;
     }
@@ -143,9 +149,11 @@ trait CrawlerHandleImageSrcContentTrait
             $alt = $this->parseGetContentValueWithExplodeAndStripTags($oldItem, 'alt="', '"');
             $caption = $this->handlePrepareDataContentDivPhotoCMSCaptionInContent($oldItem);
             $imgSrc = $this->parseMatchesImageSrcFromChecklists($oldItem, $this->handleDefaultListMatchesImageSrcFromChecklists());
-            $newItem = _crawler_convert_image_src_from_url_($imgSrc, $title, $alt);
-            $newItem = _crawler_convert_div_only_fi_img_($newItem, $caption);
-            $content = str_replace($oldItem, $newItem, $content);
+            if (!empty($imgSrc)) {
+                $newItem = _crawler_convert_image_src_from_url_($imgSrc, $title, $alt);
+                $newItem = _crawler_convert_div_only_fi_img_($newItem, $caption);
+                $content = str_replace($oldItem, $newItem, $content);
+            }
         }
         return $content;
     }
