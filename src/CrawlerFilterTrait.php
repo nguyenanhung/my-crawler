@@ -631,6 +631,25 @@ trait CrawlerFilterTrait
         return trim($content);
     }
 
+    // Parse + Handle Content Image in Body Content
+    public function handleDefaultListMatchesImageSrcFromChecklists(): array
+    {
+        return array(
+            'class="lazyload" data-src="' => '"',
+            'class=\'lazyload\' data-src=" src=\'' => "'",
+            'data-src="' => '"',
+            'data-src=\'' => "'",
+            'data-original="' => '"',
+            'data-original=\'' => "'",
+            'data-photo-original-src="' => '"',
+            'data-photo-original-src=\'' => "'",
+            'data-background-image="' => '"',
+            'data-background-image=\'' => "'",
+            'src="' => '"',
+            'src=\'' => "'",
+        );
+    }
+
     public function reformatDataContentImageLinkInContent($content, $listImages)
     {
         if (empty($content) || empty($listImages)) {
@@ -640,29 +659,31 @@ trait CrawlerFilterTrait
             $oldItem = trim($item);
             $title = $this->parseGetContentValueWithExplodeAndStripTags($oldItem, 'title="', '"');
             $alt = $this->parseGetContentValueWithExplodeAndStripTags($oldItem, 'alt="', '"');
-            $imgSrc = $this->parseMatchesImageSrcFromChecklists(
-                $oldItem,
-                array(
-                    'class="lazyload" data-src="' => '"',
-                    'class=\'lazyload\' data-src=" src=\'' => "'",
-                    'data-src="' => '"',
-                    'data-src=\'' => "'",
-                    'data-original="' => '"',
-                    'data-original=\'' => "'",
-                    'data-photo-original-src="' => '"',
-                    'data-photo-original-src=\'' => "'",
-                    'data-background-image="' => '"',
-                    'data-background-image=\'' => "'",
-                    'src="' => '"',
-                    'src=\'' => "'",
-                )
-            );
-            $newItem = '<img class="news-posts-content-image" width="100%" src="' . trim($imgSrc) . '" title="' . trim($title) . '" alt="' . trim($alt) . '" />';
+            $imgSrc = $this->parseMatchesImageSrcFromChecklists($oldItem, $this->handleDefaultListMatchesImageSrcFromChecklists());
+            $newItem = _crawler_convert_image_src_from_url_($imgSrc, $title, $alt);
             $content = str_replace($oldItem, $newItem, $content);
         }
         return $content;
     }
 
+    public function reformatDataContentFigureExpNoEditDivFiImageLinkInContent($content, $listImages)
+    {
+        if (empty($content) || empty($listImages)) {
+            return $content;
+        }
+        foreach ($listImages as $item) {
+            $oldItem = trim($item);
+            $title = $this->parseGetContentValueWithExplodeAndStripTags($oldItem, 'title="', '"');
+            $alt = $this->parseGetContentValueWithExplodeAndStripTags($oldItem, 'alt="', '"');
+            $imgSrc = $this->parseMatchesImageSrcFromChecklists($oldItem, $this->handleDefaultListMatchesImageSrcFromChecklists());
+            $newItem = _crawler_convert_image_src_from_url_($imgSrc, $title, $alt);
+            $newItem = _crawler_convert_figure_only_fi_img_($newItem);
+            $content = str_replace($oldItem, $newItem, $content);
+        }
+        return $content;
+    }
+
+    // Parse + Handle Content Video Youtube in Body Content
     public function reformatDataContentVideoYoutubeLinkInContent($content, $videoList, $matchVideoOpenTag = '<div data-oembed-url="', $matchVideoCloseTag = '"')
     {
         if (empty($content) || empty($videoList)) {

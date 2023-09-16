@@ -22,3 +22,17 @@ if (!function_exists('_crawler_convert_youtube_embed_from_id_')) {
         return trim($newHtml);
     }
 }
+if (!function_exists('_crawler_convert_image_src_from_url_')) {
+    function _crawler_convert_image_src_from_url_($imgSrc = '', $title = '', $alt = ''): string
+    {
+        $newImgSrc = '<img class="news-posts-content-image" width="100%" src="' . trim($imgSrc) . '" title="' . trim($title) . '" alt="' . trim($alt) . '" />';
+        return trim($newImgSrc);
+    }
+}
+if (!function_exists('_crawler_convert_figure_only_fi_img_')) {
+    function _crawler_convert_figure_only_fi_img_($html = ''): string
+    {
+        $newHtml = '<figure class="expNoEdit figure-bear-news-cms-content"><div class="fi-img bear-news-cms-content">' . trim($html) . '</div></figure>';
+        return trim($newHtml);
+    }
+}
