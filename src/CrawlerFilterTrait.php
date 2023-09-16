@@ -683,10 +683,12 @@ trait CrawlerFilterTrait
             $oldItem = trim($item);
             $title = $this->parseGetContentValueWithExplodeAndStripTags($oldItem, 'title="', '"');
             $alt = $this->parseGetContentValueWithExplodeAndStripTags($oldItem, 'alt="', '"');
-            $caption = $this->getContentValueWithExplode($content, '<figcaption', '</figcaption');
-            $caption = '<figcaption ' . $caption;
-            $caption = strip_tags($caption);
+
+            $checkCaption = $this->getContentValueWithExplode($content, '<figcaption', '</figcaption');
+            $addFigcaption = '<figcaption ' . $checkCaption;
+            $caption = strip_tags($addFigcaption);
             $figureCaption = '<figcaption class="figure-bear-news-cms-photo-caption"><p data-placeholder="' . trim($caption) . '">' . trim($caption) . '</p></figcaption>';
+
             $imgSrc = $this->parseMatchesImageSrcFromChecklists($oldItem, $this->handleDefaultListMatchesImageSrcFromChecklists());
             $newItem = _crawler_convert_image_src_from_url_($imgSrc, $title, $alt);
             $newItem = _crawler_convert_figure_only_fi_img_($newItem, $figureCaption);
