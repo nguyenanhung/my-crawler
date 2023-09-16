@@ -14,10 +14,27 @@ use Symfony\Component\DomCrawler\Crawler;
 
 trait CrawlerFilterTrait
 {
+    // Matches
+    public function crawlerMatchesWithSelector(Crawler $crawler, $selector = ''): bool
+    {
+        return $crawler->matches($selector);
+    }
+
+    // Text Parse
     public function crawlerFilterGetText(Crawler $crawler, $filter = ''): string
     {
         $response = $crawler->filter($filter)->each(function ($node) {
             return $node->text();
+        });
+        $content = $response[0] ?? '';
+        $content = (string)$content;
+        return trim($content);
+    }
+
+    public function crawlerFilterGetInnerText(Crawler $crawler, $filter = ''): string
+    {
+        $response = $crawler->filter($filter)->each(function ($node) {
+            return $node->innerText();
         });
         $content = $response[0] ?? '';
         $content = (string)$content;
@@ -31,6 +48,14 @@ trait CrawlerFilterTrait
         });
     }
 
+    public function crawlerFilterGetRawInnerText(Crawler $crawler, $filter = ''): array
+    {
+        return $crawler->filter($filter)->each(function ($node) {
+            return $node->innerText();
+        });
+    }
+
+    // HTML Parse
     public function crawlerFilterGetHtml(Crawler $crawler, $filter = ''): string
     {
         $response = $crawler->filter($filter)->each(function ($node) {
@@ -55,6 +80,37 @@ trait CrawlerFilterTrait
         });
     }
 
+    // Image Parse
+    public function crawlerFilterGetRawImages(Crawler $crawler, $filter = ''): array
+    {
+        return $crawler->filter($filter)->each(function ($node) {
+            return $node->image();
+        });
+    }
+
+    public function crawlerFilterGetRawImagesList(Crawler $crawler, $filter = ''): array
+    {
+        return $crawler->filter($filter)->each(function ($node) {
+            return $node->images();
+        });
+    }
+
+    // Link URL Parse
+    public function crawlerFilterGetRawLink(Crawler $crawler, $filter = ''): array
+    {
+        return $crawler->filter($filter)->each(function ($node) {
+            return $node->link();
+        });
+    }
+
+    public function crawlerFilterGetRawLinksList(Crawler $crawler, $filter = ''): array
+    {
+        return $crawler->filter($filter)->each(function ($node) {
+            return $node->links();
+        });
+    }
+
+    // Page Parse
     public function crawlerParseGetHtmlFullPage(Crawler $crawler): array
     {
         return $this->crawlerFilterGetRawHtml($crawler, 'html');
@@ -87,30 +143,6 @@ trait CrawlerFilterTrait
             }
         }
         return '';
-    }
-
-    public function crawlerReformatContentRemovedWithFilter(Crawler $crawler, $content, $filterRemoved = ''): string
-    {
-        if (empty($filterRemoved)) {
-            return $content;
-        }
-        $ads = $this->crawlerFilterGetRawHtml($crawler, $filterRemoved);
-        foreach ($ads as $ad) {
-            $content = str_replace($ad, "", $content);
-        }
-        return trim($content);
-    }
-
-    public function crawlerReformatContentRemovedWithFilterOuterHtml(Crawler $crawler, $content, $filterRemoved = ''): string
-    {
-        if (empty($filterRemoved)) {
-            return $content;
-        }
-        $ads = $this->crawlerFilterRawOuterHtml($crawler, $filterRemoved);
-        foreach ($ads as $ad) {
-            $content = str_replace($ad, "", $content);
-        }
-        return trim($content);
     }
 
     public function getDataFilterScriptJsonStructureDataFromHtml($html): array
@@ -189,35 +221,6 @@ trait CrawlerFilterTrait
         return ($f <= $l) ? mb_substr($txt, $f, $l - $f) : '';
     }
 
-    public function filterTagClassNameRemoved($html, $tag, $classname = '')
-    {
-        if (empty($classname) || empty($tag)) {
-            return $html;
-        }
-        if (strpos($classname, '"')) {
-            $pattern = "/<" . trim($tag) . $classname . ".*?\/" . trim($tag) . ">/s";
-        } elseif (strpos($classname, "'")) {
-            $pattern = '/<' . trim($tag) . $classname . '.*?\/' . trim($tag) . '>/s';
-        } else {
-            $pattern = null;
-        }
-        if ($pattern === null) {
-            return $html;
-        }
-
-        return preg_replace($pattern, "", $html) ?: $html;
-    }
-
-    public function filterScriptTagRemoved($html)
-    {
-        return preg_replace('#<script(.*?)>(.*?)</script>#is', '', $html);
-    }
-
-    public function filterCssStyleTagRemoved($html)
-    {
-        return preg_replace('#<style>(.*?)</style>#is', '', $html);
-    }
-
     public function parseGetContentValueWithDoubleExplodeAndStripTags($str, $openTag, $closeTag, $nextOpenTag, $nextCloseTag): string
     {
         if (empty($str) || empty($openTag) || empty($closeTag) || empty($nextOpenTag) || empty($nextCloseTag)) {
@@ -294,76 +297,6 @@ trait CrawlerFilterTrait
         return '';
     }
 
-    public function reformatGetFirstPositionDataContentWithFilterHtmlTag($content = '', $filterHtmlTag = '')
-    {
-        if (empty($content) || empty($filterHtmlTag)) {
-            return $content;
-        }
-
-        $explode = explode($filterHtmlTag, $content);
-        $countEx = count($explode);
-        if ($countEx > 1 && isset($explode[1])) {
-            $content = $explode[0] ?? '';
-        }
-        return $content;
-    }
-
-    public function reformatSkipFirstDataContentWithFilterPositionHtmlTag($content = '', $filterHtmlTag = '')
-    {
-        if (empty($content) || empty($filterHtmlTag)) {
-            return $content;
-        }
-
-        $explode = explode($filterHtmlTag, $content);
-        $countEx = count($explode);
-        if ($countEx > 1 && isset($explode[1])) {
-            $content = $explode[1] ?? '';
-        }
-        return $content;
-    }
-
-    public function reformatGetNextDataContentWithFilterPositionHtmlTag($content = '', $filterHtmlTag = '', $position = 1)
-    {
-        if (empty($content) || empty($filterHtmlTag)) {
-            return $content;
-        }
-
-        $explode = explode($filterHtmlTag, $content);
-        $countEx = count($explode);
-        if ($countEx > 1 && isset($explode[$position])) {
-            $content = $explode[$position] ?? '';
-        }
-        return $content;
-    }
-
-    public function reformatDataContentWithFilterHtmlTag($content = '', $filterHtmlTag = '')
-    {
-        return $this->reformatGetFirstPositionDataContentWithFilterHtmlTag($content, $filterHtmlTag);
-    }
-
-    public function reformatDataAndAddSiteUrlIntoContent($content = '', $siteUrl = '', $match = '')
-    {
-        if (empty($content) || empty($siteUrl) || empty($match)) {
-            return $content;
-        }
-        $content = str_replace($match, trim($siteUrl . $match), $content);
-
-        return trim($content);
-    }
-
-    public function reformatDataContentAndRemovedLinkHrefWithRegex($content, $listLinks)
-    {
-        if (empty($content) || empty($listLinks)) {
-            return $content;
-        }
-        foreach ($listLinks as $item) {
-            $itemNew = preg_replace('/<a(.*?)href="(.*?)"(.*?)>/', '', $item);
-            $itemNew = preg_replace('#</a>#', '', $itemNew);
-            $content = str_replace($item, $itemNew, $content);
-        }
-        return $content;
-    }
-
     public function parseMatchesImageSrcFromChecklists($txt, $checklists): string
     {
         $txt = trim($txt);
@@ -377,51 +310,6 @@ trait CrawlerFilterTrait
             }
         }
         return '';
-    }
-
-    public function reformatDataContentImageLinkInContent($content, $listImages)
-    {
-        if (empty($content) || empty($listImages)) {
-            return $content;
-        }
-        foreach ($listImages as $item) {
-            $oldItem = trim($item);
-            $title = $this->parseGetContentValueWithExplodeAndStripTags($oldItem, 'title="', '"');
-            $alt = $this->parseGetContentValueWithExplodeAndStripTags($oldItem, 'alt="', '"');
-            $imgSrc = $this->parseMatchesImageSrcFromChecklists(
-                $oldItem,
-                array(
-                    'data-src="' => '"',
-                    'data-original="' => '"',
-                    'src="' => '"',
-                )
-            );
-            $newItem = '<img class="news-posts-content-image" width="100%" src="' . trim($imgSrc) . '" title="' . trim($title) . '" alt="' . trim($alt) . '" />';
-            $content = str_replace($oldItem, $newItem, $content);
-        }
-        return $content;
-    }
-
-    public function reformatDataContentVideoYoutubeLinkInContent($content, $videoList, $matchVideoOpenTag = '<div data-oembed-url="', $matchVideoCloseTag = '"')
-    {
-        if (empty($content) || empty($videoList)) {
-            return $content;
-        }
-
-        foreach ($videoList as $oldItemHtml) {
-            $oldItemHtml = trim($oldItemHtml);
-            $youtubeID = $this->parseGetContentValueWithExplode($oldItemHtml, $matchVideoOpenTag, $matchVideoCloseTag);
-            $newHtml = _crawler_convert_youtube_embed_from_id_($youtubeID);
-            $content = str_replace($oldItemHtml, $newHtml, $content);
-        }
-        return $content;
-    }
-
-    public function reformatDataContentAndItemScopePublisherRemoved($content = '', $openTag = '<span itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization">', $closeTag = '</span>'): string
-    {
-        $itemScopePublisher = $this->getContentDataValueFromHtmlTag($content, $openTag, $closeTag);
-        $content = str_replace($itemScopePublisher, '', $content);
-        return trim($content);
     }
 
     public function getFirstImageSrcLinkInDataContent($crawler, $filter, $openTag = 'src="', $closeTag = '"'): string
@@ -714,15 +602,194 @@ trait CrawlerFilterTrait
         return trim($sapoText);
     }
 
+    // Page Content Reformat
+    public function crawlerReformatContentRemovedWithFilter(Crawler $crawler, $content, $filterRemoved = ''): string
+    {
+        if (empty($filterRemoved)) {
+            return $content;
+        }
+        $ads = $this->crawlerFilterGetRawHtml($crawler, $filterRemoved);
+        foreach ($ads as $ad) {
+            $content = str_replace($ad, "", $content);
+        }
+        return trim($content);
+    }
+
+    public function crawlerReformatContentRemovedWithFilterOuterHtml(Crawler $crawler, $content, $filterRemoved = ''): string
+    {
+        if (empty($filterRemoved)) {
+            return $content;
+        }
+        $ads = $this->crawlerFilterRawOuterHtml($crawler, $filterRemoved);
+        foreach ($ads as $ad) {
+            $content = str_replace($ad, "", $content);
+        }
+        return trim($content);
+    }
+
+    public function reformatDataContentImageLinkInContent($content, $listImages)
+    {
+        if (empty($content) || empty($listImages)) {
+            return $content;
+        }
+        foreach ($listImages as $item) {
+            $oldItem = trim($item);
+            $title = $this->parseGetContentValueWithExplodeAndStripTags($oldItem, 'title="', '"');
+            $alt = $this->parseGetContentValueWithExplodeAndStripTags($oldItem, 'alt="', '"');
+            $imgSrc = $this->parseMatchesImageSrcFromChecklists(
+                $oldItem,
+                array(
+                    'data-src="' => '"',
+                    'data-original="' => '"',
+                    'src="' => '"',
+                )
+            );
+            $newItem = '<img class="news-posts-content-image" width="100%" src="' . trim($imgSrc) . '" title="' . trim($title) . '" alt="' . trim($alt) . '" />';
+            $content = str_replace($oldItem, $newItem, $content);
+        }
+        return $content;
+    }
+
+    public function reformatDataContentVideoYoutubeLinkInContent($content, $videoList, $matchVideoOpenTag = '<div data-oembed-url="', $matchVideoCloseTag = '"')
+    {
+        if (empty($content) || empty($videoList)) {
+            return $content;
+        }
+
+        foreach ($videoList as $oldItemHtml) {
+            $oldItemHtml = trim($oldItemHtml);
+            $youtubeID = $this->parseGetContentValueWithExplode($oldItemHtml, $matchVideoOpenTag, $matchVideoCloseTag);
+            $newHtml = _crawler_convert_youtube_embed_from_id_($youtubeID);
+            $content = str_replace($oldItemHtml, $newHtml, $content);
+        }
+        return $content;
+    }
+
+    public function reformatDataContentAndItemScopePublisherRemoved($content = '', $openTag = '<span itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization">', $closeTag = '</span>'): string
+    {
+        $itemScopePublisher = $this->getContentDataValueFromHtmlTag($content, $openTag, $closeTag);
+        $content = str_replace($itemScopePublisher, '', $content);
+        return trim($content);
+    }
+
+    public function reformatGetFirstPositionDataContentWithFilterHtmlTag($content = '', $filterHtmlTag = '')
+    {
+        if (empty($content) || empty($filterHtmlTag)) {
+            return $content;
+        }
+
+        $explode = explode($filterHtmlTag, $content);
+        $countEx = count($explode);
+        if ($countEx > 1 && isset($explode[1])) {
+            $content = $explode[0] ?? '';
+        }
+        return $content;
+    }
+
+    public function reformatSkipFirstDataContentWithFilterPositionHtmlTag($content = '', $filterHtmlTag = '')
+    {
+        if (empty($content) || empty($filterHtmlTag)) {
+            return $content;
+        }
+
+        $explode = explode($filterHtmlTag, $content);
+        $countEx = count($explode);
+        if ($countEx > 1 && isset($explode[1])) {
+            $content = $explode[1] ?? '';
+        }
+        return $content;
+    }
+
+    public function reformatGetNextDataContentWithFilterPositionHtmlTag($content = '', $filterHtmlTag = '', $position = 1)
+    {
+        if (empty($content) || empty($filterHtmlTag)) {
+            return $content;
+        }
+
+        $explode = explode($filterHtmlTag, $content);
+        $countEx = count($explode);
+        if ($countEx > 1 && isset($explode[$position])) {
+            $content = $explode[$position] ?? '';
+        }
+        return $content;
+    }
+
+    public function reformatDataContentWithFilterHtmlTag($content = '', $filterHtmlTag = '')
+    {
+        return $this->reformatGetFirstPositionDataContentWithFilterHtmlTag($content, $filterHtmlTag);
+    }
+
+    public function reformatDataAndAddSiteUrlIntoContent($content = '', $siteUrl = '', $match = '')
+    {
+        if (empty($content) || empty($siteUrl) || empty($match)) {
+            return $content;
+        }
+        $content = str_replace($match, trim($siteUrl . $match), $content);
+
+        return trim($content);
+    }
+
+    public function reformatDataContentAndRemovedLinkHrefWithRegex($content, $listLinks)
+    {
+        if (empty($content) || empty($listLinks)) {
+            return $content;
+        }
+        foreach ($listLinks as $item) {
+            $itemNew = preg_replace('/<a(.*?)href="(.*?)"(.*?)>/', '', $item);
+            $itemNew = preg_replace('#</a>#', '', $itemNew);
+            $content = str_replace($item, $itemNew, $content);
+        }
+        return $content;
+    }
+
+    public function filterTagClassNameRemoved($html, $tag, $classname = '')
+    {
+        if (empty($classname) || empty($tag)) {
+            return $html;
+        }
+        if (strpos($classname, '"')) {
+            $pattern = "/<" . trim($tag) . $classname . ".*?\/" . trim($tag) . ">/s";
+        } elseif (strpos($classname, "'")) {
+            $pattern = '/<' . trim($tag) . $classname . '.*?\/' . trim($tag) . '>/s';
+        } else {
+            $pattern = null;
+        }
+        if ($pattern === null) {
+            return $html;
+        }
+
+        return preg_replace($pattern, "", $html) ?: $html;
+    }
+
+    public function filterScriptTagRemoved($html)
+    {
+        return preg_replace('#<script(.*?)>(.*?)</script>#is', '', $html);
+    }
+
+    public function filterCssStyleTagRemoved($html)
+    {
+        return preg_replace('#<style>(.*?)</style>#is', '', $html);
+    }
+
     ////////////////////// ALIAS METHOD //////////////////////
     public function crawlerFilterText(Crawler $crawler, $filter = ''): string
     {
         return $this->crawlerFilterGetText($crawler, $filter);
     }
 
+    public function crawlerFilterInnerText(Crawler $crawler, $filter = ''): string
+    {
+        return $this->crawlerFilterGetInnerText($crawler, $filter);
+    }
+
     public function crawlerFilterRawText(Crawler $crawler, $filter = ''): array
     {
         return $this->crawlerFilterGetRawText($crawler, $filter);
+    }
+
+    public function crawlerFilterRawInnerText(Crawler $crawler, $filter = ''): array
+    {
+        return $this->crawlerFilterGetRawInnerText($crawler, $filter);
     }
 
     public function crawlerFilterHtml(Crawler $crawler, $filter = ''): string
