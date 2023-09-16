@@ -441,7 +441,7 @@ trait CrawlerHandleBaseDataPageTrait
             ];
         }
 
-        // Lấy Content Selector mặc định
+        // Lấy Content Selector mặc định được config
         $requestContent = $this->crawlerHandleRequestDetailsTextContent($crawler, $listDefaultContentSelector);
         if (!empty($requestContent) && isset($requestContent['content'])) {
             return $requestContent;
