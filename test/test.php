@@ -5,39 +5,29 @@ require_once __DIR__ . '/../vendor/autoload.php';
 //
 //echo date('Y-m-d H:i:s', strtotime($time)).PHP_EOL;
 
-//$content = '<figcaption class="PhotoCMS_Caption">
-//    <p data-placeholder="[nhập chú thích]">Từ trên đền, du khách có thể phóng tầm mắt ra bãi biển Sầm Sơn thoáng đãng, trong xanh</p>
-//  </figcaption>';
-//
-//echo "<pre>";
-//print_r($content);
-//echo "</pre>";
-//
-//class ABC{
-//    use \nguyenanhung\Libraries\Crawler\CrawlerFilterTrait;
-//}
-//
-//$abc = new ABC();
-//$check = $abc->getContentValueWithExplode($content, '<figcaption', '</figcaption' );
-//$end ='<figcaption '.$check;
-//
-//echo "<pre>";
-//print_r($check);
-//echo "</pre>";
-//echo "<pre>";
-//print_r($end);
-//echo "</pre>";
-//
-//$text = strip_tags($end);
-//
-//echo "<pre>";
-//print_r($text);
-//echo "</pre>";
-//
-//$final = '<figcaption class="figure-bear-news-cms-photo-caption">
-//    <p data-placeholder="'.trim($text).'">'.trim($text).'</p>
-//  </figcaption>';
-//
-//echo "<pre>";
-//print_r($final);
-//echo "</pre>";
+$content = '<div class="PhotoCMS_Caption">
+    <p data-placeholder="[nhập chú thích]">Các đại biểu mặc niệm tưởng nhớ các nạn nhân tử vong trong vụ cháy chung cư mini tại quận Thanh Xuân.</p>
+  </div>';
+
+echo "<pre>";
+print_r($content);
+echo "</pre>";
+
+class ABC{
+    use \nguyenanhung\Libraries\Crawler\CrawlerFilterTrait;
+}
+
+$abc = new ABC();
+$check = $abc->getContentValueWithExplode($content, ' <div class="PhotoCMS_Caption">', '</div>' );
+$text = strip_tags($check);
+echo "<pre>";
+print_r($text);
+echo "</pre>";
+
+$final = '<figcaption class="figure-bear-news-cms-photo-caption">
+    <p data-placeholder="'.trim($text).'">'.trim($text).'</p>
+  </figcaption>';
+
+echo "<pre>";
+print_r($final);
+echo "</pre>";

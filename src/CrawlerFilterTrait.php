@@ -527,6 +527,8 @@ trait CrawlerFilterTrait
                     'contentFigureExpNoEditFiImgSrc' => '',
                     'contentFigureVCSortableInPreviewModeNoCaption' => '',
                     'contentFigureVCSortableInPreviewMode' => '',
+                    'contentDivVCSortableInPreviewModeNoCaption' => '',
+                    'contentDivVCSortableInPreviewMode' => '',
                 ];
             }
             return [
@@ -540,6 +542,8 @@ trait CrawlerFilterTrait
                 'contentFigureExpNoEditFiImgSrc' => $this->crawlerFilterGetRawOuterHtml($crawler, $inputNewsContentSelector . ' figure.expNoEdit div.fi-img img'),
                 'contentFigureVCSortableInPreviewModeNoCaption' => $this->crawlerFilterGetRawOuterHtml($crawler, $inputNewsContentSelector . ' figure.VCSortableInPreviewMode.noCaption'),
                 'contentFigureVCSortableInPreviewMode' => $this->crawlerFilterGetRawOuterHtml($crawler, $inputNewsContentSelector . ' figure.VCSortableInPreviewMode'),
+                'contentDivVCSortableInPreviewModeNoCaption' => $this->crawlerFilterGetRawOuterHtml($crawler, $inputNewsContentSelector . ' div.VCSortableInPreviewMode.noCaption'),
+                'contentDivVCSortableInPreviewMode' => $this->crawlerFilterGetRawOuterHtml($crawler, $inputNewsContentSelector . ' div.VCSortableInPreviewMode'),
             ];
         }
 
@@ -559,6 +563,8 @@ trait CrawlerFilterTrait
             'contentFigureExpNoEditFiImgSrc' => '',
             'contentFigureVCSortableInPreviewModeNoCaption' => '',
             'contentFigureVCSortableInPreviewMode' => '',
+            'contentDivVCSortableInPreviewModeNoCaption' => '',
+            'contentDivVCSortableInPreviewMode' => '',
         ];
     }
 
@@ -581,6 +587,8 @@ trait CrawlerFilterTrait
                     'contentFigureExpNoEditFiImgSrc' => $this->crawlerFilterGetRawOuterHtml($crawler, $selector . ' figure.expNoEdit div.fi-img img'),
                     'contentFigureVCSortableInPreviewModeNoCaption' => $this->crawlerFilterGetRawOuterHtml($crawler, $selector . ' figure.VCSortableInPreviewMode.noCaption'),
                     'contentFigureVCSortableInPreviewMode' => $this->crawlerFilterGetRawOuterHtml($crawler, $selector . ' figure.VCSortableInPreviewMode'),
+                    'contentDivVCSortableInPreviewModeNoCaption' => $this->crawlerFilterGetRawOuterHtml($crawler, $selector . ' div.VCSortableInPreviewMode.noCaption'),
+                    'contentDivVCSortableInPreviewMode' => $this->crawlerFilterGetRawOuterHtml($crawler, $selector . ' div.VCSortableInPreviewMode'),
                 ];
             }
         }
@@ -692,12 +700,39 @@ trait CrawlerFilterTrait
         return $content;
     }
 
+    public function reformatDataContentDivPhotoCMSImageLinkInContent($content, $listImages)
+    {
+        // Handle này của mấy cha VCCorp
+        if (empty($content) || empty($listImages)) {
+            return $content;
+        }
+        foreach ($listImages as $item) {
+            $oldItem = trim($item);
+            $title = $this->parseGetContentValueWithExplodeAndStripTags($oldItem, 'title="', '"');
+            $alt = $this->parseGetContentValueWithExplodeAndStripTags($oldItem, 'alt="', '"');
+            $caption = $this->handlePrepareDataContentDivPhotoCMSCaptionInContent($oldItem);
+            $imgSrc = $this->parseMatchesImageSrcFromChecklists($oldItem, $this->handleDefaultListMatchesImageSrcFromChecklists());
+            $newItem = _crawler_convert_image_src_from_url_($imgSrc, $title, $alt);
+            $newItem = _crawler_convert_div_only_fi_img_($newItem, $caption);
+            $content = str_replace($oldItem, $newItem, $content);
+        }
+        return $content;
+    }
+
     public function handlePrepareDataContentFigureFigcaptionInContent($oldItem = ''): string
     {
         $caption = $this->getContentValueWithExplode($oldItem, '<figcaption', '</figcaption');
         $caption = '<figcaption ' . $caption;
         $caption = strip_tags($caption);
         $figureCaption = _crawler_convert_figure_figcaption_($caption);
+        return trim($figureCaption);
+    }
+
+    public function handlePrepareDataContentDivPhotoCMSCaptionInContent($oldItem = ''): string
+    {
+        $caption = $this->getContentValueWithExplode($oldItem, ' <div class="PhotoCMS_Caption">', '</div>');
+        $caption = strip_tags($caption);
+        $figureCaption = _crawler_convert_div_figcaption_($caption);
         return trim($figureCaption);
     }
 
@@ -996,6 +1031,11 @@ trait CrawlerFilterTrait
     public function reformatContentFigureDivFiImgLinkImages($contentText, $listLinks)
     {
         return $this->reformatDataContentFigureDivImageLinkInContent($contentText, $listLinks);
+    }
+
+    public function reformatContentDivPhotoCMSLinkImages($contentText, $listLinks)
+    {
+        return $this->reformatDataContentDivPhotoCMSImageLinkInContent($contentText, $listLinks);
     }
 
     public function reformatContentYoutubeVideo($contentText, $listLinks)
