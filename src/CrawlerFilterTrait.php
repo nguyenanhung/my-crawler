@@ -523,6 +523,7 @@ trait CrawlerFilterTrait
                     'contentImages' => '',
                     'contentFigureMedia' => '',
                     'contentFigureExpNoEditFiImg' => '',
+                    'contentFigureExpNoEditFiImgSrc' => '',
                     'contentImageFirstUrl' => '',
                 ];
             }
@@ -532,7 +533,8 @@ trait CrawlerFilterTrait
                 'contentLink' => $this->crawlerFilterGetRawOuterHtml($crawler, $inputNewsContentSelector . ' a'),
                 'contentImages' => $this->crawlerFilterGetRawOuterHtml($crawler, $inputNewsContentSelector . ' img'),
                 'contentFigureMedia' => $this->crawlerFilterGetRawOuterHtml($crawler, $inputNewsContentSelector . ' figure.media'),
-                'contentFigureExpNoEditFiImg' => $this->crawlerFilterGetRawOuterHtml($crawler, $inputNewsContentSelector . ' figure.expNoEdit div.fi-img img'),
+                'contentFigureExpNoEditFiImg' => $this->crawlerFilterGetRawOuterHtml($crawler, $inputNewsContentSelector . ' figure.expNoEdit div.fi-img'),
+                'contentFigureExpNoEditFiImgSrc' => $this->crawlerFilterGetRawOuterHtml($crawler, $inputNewsContentSelector . ' figure.expNoEdit div.fi-img img'),
                 'contentImageFirstUrl' => $this->getFirstImageSrcLinkInDataContent($crawler, $inputNewsContentSelector),
             ];
         }
@@ -549,6 +551,7 @@ trait CrawlerFilterTrait
             'contentImages' => '',
             'contentFigureMedia' => '',
             'contentFigureExpNoEditFiImg' => '',
+            'contentFigureExpNoEditFiImgSrc' => '',
             'contentImageFirstUrl' => '',
         ];
     }
@@ -567,7 +570,8 @@ trait CrawlerFilterTrait
                     'contentLink' => $this->crawlerFilterGetRawOuterHtml($crawler, $selector . ' a'),
                     'contentImages' => $this->crawlerFilterGetRawOuterHtml($crawler, $selector . ' img'),
                     'contentFigureMedia' => $this->crawlerFilterGetRawOuterHtml($crawler, $selector . ' figure.media'),
-                    'contentFigureExpNoEditFiImg' => $this->crawlerFilterGetRawOuterHtml($crawler, $selector . ' figure.expNoEdit div.fi-img img'),
+                    'contentFigureExpNoEditFiImg' => $this->crawlerFilterGetRawOuterHtml($crawler, $selector . ' figure.expNoEdit div.fi-img'),
+                    'contentFigureExpNoEditFiImgSrc' => $this->crawlerFilterGetRawOuterHtml($crawler, $selector . ' figure.expNoEdit div.fi-img img'),
                     'contentImageFirstUrl' => $this->getFirstImageSrcLinkInDataContent($crawler, $selector),
                 ];
             }
@@ -639,9 +643,18 @@ trait CrawlerFilterTrait
             $imgSrc = $this->parseMatchesImageSrcFromChecklists(
                 $oldItem,
                 array(
+                    'class="lazyload" data-src="' => '"',
+                    'class=\'lazyload\' data-src=" src=\'' => "'",
                     'data-src="' => '"',
+                    'data-src=\'' => "'",
                     'data-original="' => '"',
+                    'data-original=\'' => "'",
+                    'data-photo-original-src="' => '"',
+                    'data-photo-original-src=\'' => "'",
+                    'data-background-image="' => '"',
+                    'data-background-image=\'' => "'",
                     'src="' => '"',
+                    'src=\'' => "'",
                 )
             );
             $newItem = '<img class="news-posts-content-image" width="100%" src="' . trim($imgSrc) . '" title="' . trim($title) . '" alt="' . trim($alt) . '" />';
