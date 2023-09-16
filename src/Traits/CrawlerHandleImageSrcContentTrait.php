@@ -31,6 +31,21 @@ trait CrawlerHandleImageSrcContentTrait
         );
     }
 
+    public function parseMatchesImageSrcFromChecklists($txt, $checklists): string
+    {
+        $txt = trim($txt);
+        if (empty($txt) || empty($checklists)) {
+            return $txt;
+        }
+        foreach ($checklists as $openTag => $closeTag) {
+            $res = $this->parseGetContentValueWithExplodeAndStripTags($txt, $openTag, $closeTag);
+            if (!empty($res)) {
+                return trim($res);
+            }
+        }
+        return '';
+    }
+
     public function handleRequestPrepareDataContentFigureFigcaptionInContent($oldItem = ''): string
     {
         $caption = $this->getContentValueWithExplode($oldItem, '<figcaption', '</figcaption');
@@ -48,7 +63,7 @@ trait CrawlerHandleImageSrcContentTrait
 
     public function handleRequestPrepareDataContentDivPhotoCMSCaptionInContent($oldItem = ''): string
     {
-        $caption = $this->getContentValueWithExplode($oldItem, ' <div class="PhotoCMS_Caption">', '</div>');
+        $caption = $this->getContentValueWithExplode($oldItem, '<div class="PhotoCMS_Caption">', '</div>');
         $caption = strip_tags($caption);
         return trim($caption);
     }
@@ -86,14 +101,13 @@ trait CrawlerHandleImageSrcContentTrait
             $oldItem = trim($item);
             $title = $this->parseGetContentValueWithExplodeAndStripTags($oldItem, 'title="', '"');
             $alt = $this->parseGetContentValueWithExplodeAndStripTags($oldItem, 'alt="', '"');
-            $caption = $this->handlePrepareDataContentFigureFigcaptionInContent($oldItem);
-            $captionRequest = $this->handleRequestPrepareDataContentFigureFigcaptionInContent($oldItem);
-            if (empty($captionRequest)) {
-                $caption = $this->handlePrepareDataContentDivPhotoCMSCaptionInContent($oldItem);
+            $caption = $this->handleRequestPrepareDataContentFigureFigcaptionInContent($oldItem);
+            if (empty($caption)) {
+                $caption = $this->handleRequestPrepareDataContentDivPhotoCMSCaptionInContent($oldItem);
             }
             $imgSrc = $this->parseMatchesImageSrcFromChecklists($oldItem, $this->handleDefaultListMatchesImageSrcFromChecklists());
             $newItem = _crawler_convert_image_src_from_url_($imgSrc, $title, $alt);
-            $newItem = _crawler_convert_figure_only_fi_img_($newItem, $caption);
+            $newItem = _crawler_convert_figure_only_fi_img_($newItem, _crawler_convert_figure_figcaption_($caption));
             $content = str_replace($oldItem, $newItem, $content);
         }
         return $content;
@@ -136,6 +150,13 @@ trait CrawlerHandleImageSrcContentTrait
         return $content;
     }
 
+    public function getFirstImageSrcLinkInDataContent($crawler, $filter, $openTag = 'src="', $closeTag = '"'): string
+    {
+        $contentListImages = $this->crawlerFilterGetRawOuterHtml($crawler, $filter);
+        $imageSrc = isset($contentListImages[0]) ? $this->parseGetContentValueWithExplode($contentListImages[0], $openTag, $closeTag) : '';
+        return trim($imageSrc);
+    }
+
     // Alias
     public function reformatContentLinkImages($contentText, $listLinks)
     {
@@ -155,5 +176,10 @@ trait CrawlerHandleImageSrcContentTrait
     public function reformatContentDivPhotoCMSLinkImages($contentText, $listLinks)
     {
         return $this->reformatDataContentDivPhotoCMSImageLinkInContent($contentText, $listLinks);
+    }
+
+    public function getFirstImageLinkInContent($crawler, $filter, $openTag = 'src="', $closeTag = '"'): string
+    {
+        return $this->getFirstImageSrcLinkInDataContent($crawler, $filter, $openTag, $closeTag);
     }
 }
