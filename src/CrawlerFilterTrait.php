@@ -521,8 +521,9 @@ trait CrawlerFilterTrait
                     'content' => '',
                     'contentLink' => '',
                     'contentImages' => '',
-                    'contentImageFirstUrl' => '',
                     'contentFigureMedia' => '',
+                    'contentFigureExpNoEditFiImg' => '',
+                    'contentImageFirstUrl' => '',
                 ];
             }
             return [
@@ -530,8 +531,9 @@ trait CrawlerFilterTrait
                 'content' => $this->crawlerFilterGetHtml($crawler, $inputNewsContentSelector),
                 'contentLink' => $this->crawlerFilterGetRawOuterHtml($crawler, $inputNewsContentSelector . ' a'),
                 'contentImages' => $this->crawlerFilterGetRawOuterHtml($crawler, $inputNewsContentSelector . ' img'),
-                'contentImageFirstUrl' => $this->getFirstImageSrcLinkInDataContent($crawler, $inputNewsContentSelector),
                 'contentFigureMedia' => $this->crawlerFilterGetRawOuterHtml($crawler, $inputNewsContentSelector . ' figure.media'),
+                'contentFigureExpNoEditFiImg' => $this->crawlerFilterGetRawOuterHtml($crawler, $inputNewsContentSelector . ' figure.expNoEdit div.fi-img img'),
+                'contentImageFirstUrl' => $this->getFirstImageSrcLinkInDataContent($crawler, $inputNewsContentSelector),
             ];
         }
 
@@ -545,8 +547,9 @@ trait CrawlerFilterTrait
             'content' => '',
             'contentLink' => '',
             'contentImages' => '',
-            'contentImageFirstUrl' => '',
             'contentFigureMedia' => '',
+            'contentFigureExpNoEditFiImg' => '',
+            'contentImageFirstUrl' => '',
         ];
     }
 
@@ -558,17 +561,14 @@ trait CrawlerFilterTrait
         foreach ($newsContentSelectorList as $selector) {
             $content = $this->crawlerFilterGetHtml($crawler, $selector);
             if (!empty($content)) {
-                $contentLink = $this->crawlerFilterGetRawOuterHtml($crawler, $selector . ' a');
-                $contentImages = $this->crawlerFilterGetRawOuterHtml($crawler, $selector . ' img');
-                $contentFigureMedia = $this->crawlerFilterGetRawOuterHtml($crawler, $selector . ' figure.media');
-                $imageFirstUrl = $this->getFirstImageSrcLinkInDataContent($crawler, $selector);
                 return [
                     'selector' => $selector,
                     'content' => $content,
-                    'contentLink' => $contentLink,
-                    'contentImages' => $contentImages,
-                    'contentImageFirstUrl' => $imageFirstUrl,
-                    'contentFigureMedia' => $contentFigureMedia,
+                    'contentLink' => $this->crawlerFilterGetRawOuterHtml($crawler, $selector . ' a'),
+                    'contentImages' => $this->crawlerFilterGetRawOuterHtml($crawler, $selector . ' img'),
+                    'contentFigureMedia' => $this->crawlerFilterGetRawOuterHtml($crawler, $selector . ' figure.media'),
+                    'contentFigureExpNoEditFiImg' => $this->crawlerFilterGetRawOuterHtml($crawler, $selector . ' figure.expNoEdit div.fi-img img'),
+                    'contentImageFirstUrl' => $this->getFirstImageSrcLinkInDataContent($crawler, $selector),
                 ];
             }
         }
