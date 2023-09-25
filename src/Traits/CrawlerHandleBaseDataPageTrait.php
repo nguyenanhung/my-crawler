@@ -318,7 +318,8 @@ trait CrawlerHandleBaseDataPageTrait
             '<meta property="dable:image" content="' => '"',
             '<link rel="image_src" href="' => '"',
             '<meta name="og:image" content="' => '"',
-            '<meta name="image_sr" content="' => '"',
+
+            '<meta name="image_src" content="' => '"',
             '<meta name="image" content="' => '"',
             '<meta name="thumbnail" content="' => '"',
         ];

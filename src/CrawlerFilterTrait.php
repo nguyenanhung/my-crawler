@@ -12,6 +12,7 @@ namespace nguyenanhung\Libraries\Crawler;
 
 use nguyenanhung\Libraries\Crawler\Traits\CrawlerHandleBaseFilterTrait;
 use nguyenanhung\Libraries\Crawler\Traits\CrawlerHandleBaseDataPageTrait;
+use nguyenanhung\Libraries\Crawler\Traits\CrawlerHandleFilterPageMetaTrait;
 use nguyenanhung\Libraries\Crawler\Traits\CrawlerHandleGetHeadMetaAliasTrait;
 use nguyenanhung\Libraries\Crawler\Traits\CrawlerHandleImageSrcContentTrait;
 use nguyenanhung\Libraries\Crawler\Traits\CrawlerHandleReformatAndRemovedTrait;
@@ -22,7 +23,7 @@ trait CrawlerFilterTrait
     use CrawlerHandleBaseFilterTrait, CrawlerHandleBaseDataPageTrait,
         CrawlerHandleReformatAndRemovedTrait,
         CrawlerHandleImageSrcContentTrait, CrawlerHandleVideoInContentTrait,
-        CrawlerHandleGetHeadMetaAliasTrait;
+        CrawlerHandleGetHeadMetaAliasTrait, CrawlerHandleFilterPageMetaTrait;
 
     ////////////////////// ALIAS METHOD //////////////////////
 
