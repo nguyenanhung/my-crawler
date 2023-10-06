@@ -36,6 +36,9 @@
     "autoload": {
         "psr-4": {
             "nguyenanhung\\Libraries\\Crawler\\": "src/"
-        }
+        },
+        "files": [
+            "helpers/helpers.php"
+        ]
     }
 }
