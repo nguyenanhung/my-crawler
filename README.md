@@ -1,4 +1,9 @@
-[![Latest Stable Version](http://poser.pugx.org/nguyenanhung/my-crawler/v)](https://packagist.org/packages/nguyenanhung/my-crawler) [![Total Downloads](http://poser.pugx.org/nguyenanhung/my-crawler/downloads)](https://packagist.org/packages/nguyenanhung/my-crawler) [![Latest Unstable Version](http://poser.pugx.org/nguyenanhung/my-crawler/v/unstable)](https://packagist.org/packages/nguyenanhung/my-crawler) [![License](http://poser.pugx.org/nguyenanhung/my-crawler/license)](https://packagist.org/packages/nguyenanhung/my-crawler) [![PHP Version Require](http://poser.pugx.org/nguyenanhung/my-crawler/require/php)](https://packagist.org/packages/nguyenanhung/my-crawler)
+[![Latest Stable Version](https://img.shields.io/packagist/v/nguyenanhung/my-crawler.svg?style=flat-square)](https://packagist.org/packages/nguyenanhung/my-crawler)
+[![Total Downloads](https://img.shields.io/packagist/dt/nguyenanhung/my-crawler.svg?style=flat-square)](https://packagist.org/packages/nguyenanhung/my-crawler)
+[![Daily Downloads](https://img.shields.io/packagist/dd/nguyenanhung/my-crawler.svg?style=flat-square)](https://packagist.org/packages/nguyenanhung/my-crawler)
+[![Monthly Downloads](https://img.shields.io/packagist/dm/nguyenanhung/my-crawler.svg?style=flat-square)](https://packagist.org/packages/nguyenanhung/my-crawler)
+[![License](https://img.shields.io/packagist/l/nguyenanhung/my-crawler.svg?style=flat-square)](https://packagist.org/packages/nguyenanhung/my-crawler)
+[![PHP Version Require](https://img.shields.io/packagist/dependency-v/nguyenanhung/my-crawler/php)](https://packagist.org/packages/nguyenanhung/my-crawler)
 
 # Base Crawler
 
